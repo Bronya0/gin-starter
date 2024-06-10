@@ -27,7 +27,7 @@ func InitServer() {
 		Handler:      router,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
-		IdleTimeout:  30 * time.Second,
+		IdleTimeout:  300 * time.Second,
 	}
 	fmt.Printf("欢迎主人！服务运行地址：http://%s\n", addr)
 	printRegisteredRoutes(router)
