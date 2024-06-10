@@ -1,10 +1,12 @@
 package main
 
 import (
+	"gin-starter/internal/global"
 	"gin-starter/internal/router"
 	"gin-starter/internal/utils"
 	"gin-starter/internal/utils/logger"
 	"gin-starter/internal/utils/validator_zh"
+	"path"
 )
 
 //go:generate go env -w GO111MODULE=on
@@ -13,7 +15,7 @@ import (
 
 func main() {
 	// 加载配置文件
-	utils.InitConfig("./config/config.yaml")
+	utils.InitConfig(path.Join(global.RootPath, "config/config.yaml"))
 	// 初始化logger
 	logger.InitLogger()
 	// 连接数据库

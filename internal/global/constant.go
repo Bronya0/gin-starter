@@ -5,8 +5,12 @@ import (
 	"github.com/casbin/casbin/v2"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"log"
+	"os"
 	"path"
+	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 var (
@@ -16,7 +20,7 @@ var (
 
 	DateFormat = "2006-01-02 15:04:05" //  设置全局日期时间格式
 	Enforcer   *casbin.SyncedEnforcer
-	RootPath   = GetRootPath()
+	RootPath   = path.Dir(path.Dir(path.Dir(getCurrentAbPath())))
 )
 
 // 这里定义的常量，一般是具有错误代码+错误说明组成，一般用于接口返回
@@ -52,11 +56,41 @@ const (
 	CSTLayout = "2006-01-02 15:04:05"
 )
 
-func GetCurPath() string {
-	_, file, _, _ := runtime.Caller(0)
-	return path.Dir(file)
+// 最终方案-全兼容
+func getCurrentAbPath() string {
+	dir := getCurrentAbPathByExecutable()
+	if strings.Contains(dir, getTmpDir()) {
+		return getCurrentAbPathByCaller()
+	}
+	return dir
 }
-func GetRootPath() string {
-	_, file, _, _ := runtime.Caller(0)
-	return path.Dir(path.Dir(file))
+
+// 获取系统临时目录，兼容go run
+func getTmpDir() string {
+	dir := os.Getenv("TEMP")
+	if dir == "" {
+		dir = os.Getenv("TMP")
+	}
+	res, _ := filepath.EvalSymlinks(dir)
+	return res
+}
+
+// 获取当前执行文件绝对路径
+func getCurrentAbPathByExecutable() string {
+	exePath, err := os.Executable()
+	if err != nil {
+		log.Fatal(err)
+	}
+	res, _ := filepath.EvalSymlinks(filepath.Dir(exePath))
+	return res
+}
+
+// 获取当前执行文件绝对路径（go run）
+func getCurrentAbPathByCaller() string {
+	var abPath string
+	_, filename, _, ok := runtime.Caller(0)
+	if ok {
+		abPath = path.Dir(filename)
+	}
+	return abPath
 }
