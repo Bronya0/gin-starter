@@ -20,7 +20,7 @@ var (
 
 	DateFormat = "2006-01-02 15:04:05" //  设置全局日期时间格式
 	Enforcer   *casbin.SyncedEnforcer
-	RootPath   = path.Dir(path.Dir(path.Dir(getCurrentAbPath())))
+	RootPath   = path.Dir(getCurrentAbPath())
 )
 
 // 这里定义的常量，一般是具有错误代码+错误说明组成，一般用于接口返回
