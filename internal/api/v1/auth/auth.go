@@ -67,7 +67,7 @@ func Login(c *gin.Context) {
 					"realName":   userModel.RealName,
 					"phone":      phone,
 					"token":      userToken,
-					"updated_at": time.Now().Format(global.DateFormat),
+					"updated_at": time.Now().Format(time.DateTime),
 				}
 				response.Success(c, global.CurdStatusOkMsg, data)
 				go userModel.UpdateUserloginInfo(c.ClientIP(), userModel.Id)

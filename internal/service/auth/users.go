@@ -69,7 +69,7 @@ func (u *UsersModel) OauthLoginToken(userId int64, token string, expiresAt int64
 		`
 	//注意：token的精确度为秒，如果在一秒之内，一个账号多次调用接口生成的token其实是相同的，这样写入数据库，第二次的影响行数为0，知己实际上操作仍然是有效的。
 	//所以这里只判断无错误即可，判断影响行数的话，>=0 都是ok的
-	if global.DB.Exec(sql, userId, token, time.Unix(expiresAt, 0).Format(global.DateFormat), clientIp, userId, token).Error == nil {
+	if global.DB.Exec(sql, userId, token, time.Unix(expiresAt, 0).Format(time.DateTime), clientIp, userId, token).Error == nil {
 		// 异步缓存用户有效的token到redis
 		//if global.GloConfig.Jwt.GetInt("Token.IsCacheToRedis") == 1 {
 		//	go u.ValidTokenCacheToRedis(userId)
@@ -94,7 +94,7 @@ func (u *UsersModel) OauthRefreshConditionCheck(userId int64, oldToken string) b
 // OauthRefreshToken 用户刷新token
 func (u *UsersModel) OauthRefreshToken(userId, expiresAt int64, oldToken, newToken, clientIp string) bool {
 	sql := "UPDATE   web.tb_oauth_access_tokens   SET  token=? ,expires_at=?,client_ip=?,updated_at= now() ,action_name='refresh'  WHERE   fr_user_id=? AND token=?"
-	if global.DB.Exec(sql, newToken, time.Unix(expiresAt, 0).Format(global.DateFormat), clientIp, userId, oldToken).Error == nil {
+	if global.DB.Exec(sql, newToken, time.Unix(expiresAt, 0).Format(time.DateTime), clientIp, userId, oldToken).Error == nil {
 		// 异步缓存用户有效的token到redis
 		//if variable.ConfigYml.GetInt("Token.IsCacheToRedis") == 1 {
 		//	go u.ValidTokenCacheToRedis(userId)
@@ -108,7 +108,7 @@ func (u *UsersModel) OauthRefreshToken(userId, expiresAt int64, oldToken, newTok
 // UpdateUserloginInfo 更新用户登陆次数、最近一次登录ip、最近一次登录时间
 func (u *UsersModel) UpdateUserloginInfo(last_login_ip string, userId int64) {
 	sql := "UPDATE  web.tb_users   SET  login_times=COALESCE(login_times,0)+1,last_login_ip=?,last_login_time=?  WHERE   id=?  "
-	_ = global.DB.Exec(sql, last_login_ip, time.Now().Format(global.DateFormat), userId)
+	_ = global.DB.Exec(sql, last_login_ip, time.Now().Format(time.DateTime), userId)
 }
 
 // OauthResetToken 当用户更改密码后，所有的token都失效，必须重新登录
