@@ -29,7 +29,7 @@ func InitServer() {
 		WriteTimeout: 30 * time.Second,
 		IdleTimeout:  300 * time.Second,
 	}
-	fmt.Printf("欢迎主人！服务运行地址：http://%s\n", addr)
+	global.Logger.Info("欢迎主人！服务运行地址：http://%s\n", addr)
 	printRegisteredRoutes(router)
 	global.Logger.Error(srv.ListenAndServe().Error())
 
@@ -42,7 +42,7 @@ func printRegisteredRoutes(r *gin.Engine) {
 		// 输出路由信息
 		fmt.Printf("%s %s, ", route.Method, route.Path)
 	}
-	fmt.Println("")
+	global.Logger.Info("")
 
 }
 

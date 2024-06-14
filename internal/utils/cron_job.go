@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"gin-starter/internal/global"
 	"github.com/robfig/cron/v3"
 )
 
@@ -12,7 +13,7 @@ func InitCronJob() {
 		panic(err)
 	}
 
-	fmt.Println("定时任务加载成功...")
+	global.Logger.Info("定时任务加载成功...")
 
 }
 
