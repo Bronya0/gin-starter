@@ -96,7 +96,7 @@ func createCustomGormLog(options ...Options) gormLog.Interface {
 	)
 	logConf := gormLog.Config{
 		SlowThreshold: time.Second * 1,
-		LogLevel:      gormLog.Info,
+		LogLevel:      gormLog.Warn,
 		Colorful:      false,
 	}
 	log := &logger{
