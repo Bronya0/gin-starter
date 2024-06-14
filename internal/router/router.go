@@ -42,6 +42,7 @@ func printRegisteredRoutes(r *gin.Engine) {
 		// 输出路由信息
 		fmt.Printf("%s %s, ", route.Method, route.Path)
 	}
+	fmt.Println("")
 
 }
 
