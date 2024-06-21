@@ -46,6 +46,13 @@ func (cm *ConcurrentMap[K, V]) Range(f func(key K, value V) bool) {
 	}
 }
 
+// Clear 清空 ConcurrentMap
+func (cm *ConcurrentMap[K, V]) Clear() {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	cm.m = make(map[K]V)
+}
+
 //	// 示例：使用字符串键和整数值
 //	myMap := NewConcurrentMap[string, int]()
 //
