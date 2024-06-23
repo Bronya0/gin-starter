@@ -17,10 +17,10 @@ import (
 	"time"
 )
 
-// InitRouter 加载配置文件的端口，启动gin服务，同时初始化路由
+// InitServer 加载配置文件的端口，启动gin服务，同时初始化路由
 func InitServer() {
 	cfg := global.GloConfig.Server
-	router := CreateRouter()
+	router := CreateRouter() //
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 	srv := &http.Server{
 		Addr:         addr,
@@ -29,8 +29,8 @@ func InitServer() {
 		WriteTimeout: 30 * time.Second,
 		IdleTimeout:  300 * time.Second,
 	}
-	global.Logger.Info("欢迎主人！服务运行地址：http://%s\n", addr)
-	printRegisteredRoutes(router)
+	global.Logger.Infof("欢迎主人！服务运行地址：http://%s\n", addr)
+	//printRegisteredRoutes(router)
 	global.Logger.Error(srv.ListenAndServe().Error())
 
 }
@@ -52,8 +52,11 @@ func CreateRouter() *gin.Engine {
 	// 注册通用路由
 	r := CommonRouter()
 
+	// 注册中间件
+	InitMiddleware(r)
+
 	// 注册自定义路由
-	r = CustomRouter(r)
+	CustomRouter(r)
 
 	return r
 }
@@ -75,6 +78,11 @@ func CommonRouter() *gin.Engine {
 		r = gin.Default()
 		pprof.Register(r)
 	}
+	return r
+
+}
+
+func InitMiddleware(r *gin.Engine) {
 
 	//设置跨域，真正的跨域保护应该在网关层做
 	r.Use(utils.AccessCors())
@@ -114,7 +122,4 @@ func CommonRouter() *gin.Engine {
 			"title": "欢迎主人访问授权接口",
 		})
 	})
-
-	return r
-
 }

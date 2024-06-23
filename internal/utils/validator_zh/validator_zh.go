@@ -2,6 +2,7 @@ package validator_zh
 
 import (
 	"fmt"
+	"gin-starter/internal/global"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
@@ -19,7 +20,7 @@ func InitValidator(locale string) {
 	if err := InitTrans(locale); err != nil {
 		panic(err)
 	}
-	fmt.Println("验证器初始化并本土化成功...")
+	global.Logger.Info("验证器初始化并本土化成功...")
 }
 
 // InitTrans 初始化表单参数验证器的翻译器
