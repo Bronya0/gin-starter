@@ -76,6 +76,7 @@ func CommonRouter() *gin.Engine {
 		// 【调试模式】
 		// 开启 pprof 包，便于开发阶段分析程序性能
 		r = gin.Default()
+		//http://localhost:8001/debug/pprof
 		pprof.Register(r)
 	}
 	return r

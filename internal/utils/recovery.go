@@ -10,6 +10,7 @@ import (
 )
 
 // CustomRecovery 自定义错误(panic等)拦截中间件、对可能发生的错误进行拦截、统一记录
+// 只能recover主线程的panic错误
 func CustomRecovery() gin.HandlerFunc {
 	DefaultErrorWriter := &PanicExceptionRecord{}
 	return gin.RecoveryWithWriter(DefaultErrorWriter, func(c *gin.Context, err interface{}) {
