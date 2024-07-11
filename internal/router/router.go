@@ -9,7 +9,6 @@ import (
 	"gin-starter/internal/middle"
 	"gin-starter/internal/utils"
 	"github.com/gin-contrib/gzip"
-	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -21,7 +20,10 @@ import (
 // InitServer 加载配置文件的端口，启动gin服务，同时初始化路由
 func InitServer() {
 	cfg := config.GloConfig.Server
-	router := CreateRouter() //
+
+	// ===注册路由===
+	router := CreateRouter()
+
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 	srv := &http.Server{
 		Addr:         addr,
@@ -77,8 +79,11 @@ func CommonRouter() *gin.Engine {
 		// 【调试模式】
 		// 开启 pprof 包，便于开发阶段分析程序性能
 		r = gin.Default()
+		gin.ForceConsoleColor()
+
+		// pprof
 		//http://localhost:8001/debug/pprof
-		pprof.Register(r)
+		//pprof.Register(r)
 	}
 	return r
 
