@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"errors"
+	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"gin-starter/internal/service/auth"
 	"github.com/dgrijalva/jwt-go"
@@ -11,7 +12,7 @@ import (
 // CreateUserFactory 创建 userToken 工厂
 func CreateUserFactory() *userToken {
 	return &userToken{
-		userJwt: CreateMyJWT(global.GloConfig.Jwt.JwtTokenSignKey),
+		userJwt: CreateMyJWT(config.GloConfig.Jwt.JwtTokenSignKey),
 	}
 }
 
@@ -58,7 +59,7 @@ func (u *userToken) RecordLoginToken(userToken, clientIp string) bool {
 // TokenIsMeetRefreshCondition 检查token是否满足刷新条件
 func (u *userToken) TokenIsMeetRefreshCondition(token string) bool {
 	// token基本信息是否有效：1.过期时间在允许的过期范围内;2.基本格式正确
-	customClaims, code := u.isNotExpired(token, global.GloConfig.Jwt.JwtTokenRefreshAllowSec)
+	customClaims, code := u.isNotExpired(token, config.GloConfig.Jwt.JwtTokenRefreshAllowSec)
 	switch code {
 	case global.JwtTokenOK, global.JwtTokenExpired:
 		//在数据库的存储信息是否也符合过期刷新刷新条件
@@ -73,7 +74,7 @@ func (u *userToken) TokenIsMeetRefreshCondition(token string) bool {
 func (u *userToken) RefreshToken(oldToken, clientIp string) (newToken string, res bool) {
 	var err error
 	//如果token是有效的、或者在过期时间内，那么执行更新，换取新token
-	if newToken, err = u.userJwt.RefreshToken(oldToken, global.GloConfig.Jwt.JwtTokenRefreshAllowSec); err == nil {
+	if newToken, err = u.userJwt.RefreshToken(oldToken, config.GloConfig.Jwt.JwtTokenRefreshAllowSec); err == nil {
 		if customClaims, err := u.userJwt.ParseToken(newToken); err == nil {
 			userId := customClaims.UserId
 			expiresAt := customClaims.ExpiresAt

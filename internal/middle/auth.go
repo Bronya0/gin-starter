@@ -1,6 +1,7 @@
 package middle
 
 import (
+	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"gin-starter/internal/model/response"
 	"gin-starter/internal/service/auth/jwt"
@@ -20,7 +21,7 @@ func CheckTokenAuth() gin.HandlerFunc {
 
 		//  推荐使用 ShouldBindHeader 方式获取头参数
 		if err := c.ShouldBindHeader(&headerParams); err != nil {
-			response.UnauthorizedResponse(c, "token为必填项,请在请求header部分提交!")
+			response.ErrorResponse(c, "token为必填项,请在请求header部分提交!", nil)
 			return
 		}
 		token := strings.Split(headerParams.Authorization, " ")
@@ -28,16 +29,16 @@ func CheckTokenAuth() gin.HandlerFunc {
 			tokenIsEffective := jwt.CreateUserFactory().IsEffective(token[1])
 			if tokenIsEffective {
 				if customToken, err := jwt.CreateUserFactory().ParseToken(token[1]); err == nil {
-					key := global.GloConfig.Jwt.BindcKeyName
+					key := config.GloConfig.Jwt.BindcKeyName
 					// token验证通过，同时绑定在请求上下文
 					c.Set(key, customToken)
 				}
 				c.Next()
 			} else {
-				response.UnauthorizedResponse(c, "")
+				response.ErrorResponse(c, "", "")
 			}
 		} else {
-			response.UnauthorizedResponse(c, "")
+			response.ErrorResponse(c, "", "")
 		}
 	}
 }
@@ -50,7 +51,7 @@ func CheckTokenAuthWithRefresh() gin.HandlerFunc {
 
 		//  推荐使用 ShouldBindHeader 方式获取头参数
 		if err := c.ShouldBindHeader(&headerParams); err != nil {
-			response.ErrorResponse(c, 5000, global.JwtTokenMustValid+err.Error())
+			response.ErrorResponse(c, "", global.JwtTokenMustValid+err.Error())
 			return
 		}
 		token := strings.Split(headerParams.Authorization, " ")
@@ -59,7 +60,7 @@ func CheckTokenAuthWithRefresh() gin.HandlerFunc {
 			// 判断token是否有效
 			if tokenIsEffective {
 				if customToken, err := jwt.CreateUserFactory().ParseToken(token[1]); err == nil {
-					key := global.GloConfig.Jwt.BindcKeyName
+					key := config.GloConfig.Jwt.BindcKeyName
 					// token验证通过，同时绑定在请求上下文
 					c.Set(key, customToken)
 					// 在自动刷新token的中间件中，将请求的认证键、值，原路返回，与后续刷新逻辑格式保持一致
@@ -73,7 +74,7 @@ func CheckTokenAuthWithRefresh() gin.HandlerFunc {
 					// 刷新token
 					if newToken, ok := jwt.CreateUserFactory().RefreshToken(token[1], c.ClientIP()); ok {
 						if customToken, err := jwt.CreateUserFactory().ParseToken(newToken); err == nil {
-							key := global.GloConfig.Jwt.BindcKeyName
+							key := config.GloConfig.Jwt.BindcKeyName
 							// token刷新成功，同时绑定在请求上下文
 							c.Set(key, customToken)
 						}
@@ -82,14 +83,14 @@ func CheckTokenAuthWithRefresh() gin.HandlerFunc {
 						c.Header("Access-Control-Expose-Headers", "Refresh-Token")
 						c.Next()
 					} else {
-						response.ErrorResponse(c, 5000, "")
+						response.ErrorResponse(c, "", "")
 					}
 				} else {
-					response.ErrorResponse(c, 5000, "")
+					response.ErrorResponse(c, "", "")
 				}
 			}
 		} else {
-			response.ErrorResponse(c, 5000, "")
+			response.ErrorResponse(c, "", "")
 		}
 	}
 }
@@ -100,7 +101,7 @@ func RefreshTokenConditionCheck() gin.HandlerFunc {
 
 		headerParams := HeaderParams{}
 		if err := c.ShouldBindHeader(&headerParams); err != nil {
-			response.ErrorResponse(c, 5000, global.JwtTokenMustValid+err.Error())
+			response.ErrorResponse(c, "", global.JwtTokenMustValid+err.Error())
 			return
 		}
 		token := strings.Split(headerParams.Authorization, " ")
@@ -109,10 +110,10 @@ func RefreshTokenConditionCheck() gin.HandlerFunc {
 			if jwt.CreateUserFactory().TokenIsMeetRefreshCondition(token[1]) {
 				c.Next()
 			} else {
-				response.ErrorResponse(c, 5000, "")
+				response.ErrorResponse(c, "", "")
 			}
 		} else {
-			response.ErrorResponse(c, 5000, "")
+			response.ErrorResponse(c, "", "")
 		}
 	}
 }
@@ -132,10 +133,10 @@ func CheckCasbinAuth() gin.HandlerFunc {
 		// 这里将用户的id解析为所拥有的的角色，判断是否具有某个权限即可
 		isPass, err := global.Enforcer.Enforce(role, requstUrl, method)
 		if err != nil {
-			response.ErrorResponse(c, 5000, err.Error())
+			response.ErrorResponse(c, "", err.Error())
 			return
 		} else if !isPass {
-			response.ErrorResponse(c, 5000, "")
+			response.ErrorResponse(c, "", "")
 			return
 		} else {
 			c.Next()

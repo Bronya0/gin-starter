@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"fmt"
+	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -16,7 +17,7 @@ import (
 )
 
 func InitDB() {
-	global.DB = InitGorm(global.GloConfig.DB.Type)
+	global.DB = InitGorm(config.GloConfig.DB.Type)
 	global.Logger.Info("数据库连接成功...")
 }
 
@@ -31,7 +32,7 @@ func InitGorm(DbType string) *gorm.DB {
 	}
 }
 func GormMysql() *gorm.DB {
-	DbConfig := global.GloConfig.DB
+	DbConfig := config.GloConfig.DB
 
 	mysqlConfig := mysql.Config{
 		DSN:                       DbConfig.DSN, // DSN data source name
@@ -50,7 +51,7 @@ func GormMysql() *gorm.DB {
 }
 
 func GormPgSql() *gorm.DB {
-	DbConfig := global.GloConfig.DB
+	DbConfig := config.GloConfig.DB
 
 	pgsqlConfig := postgres.Config{
 		DSN:                  DbConfig.DSN, // DSN data source name

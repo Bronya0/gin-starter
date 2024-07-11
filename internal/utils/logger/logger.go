@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -13,11 +14,11 @@ import (
 func InitLogger() {
 	// 文件写入器配置
 	fileWriter := zapcore.AddSync(&lumberjack.Logger{
-		Filename:   global.GloConfig.Logs.Path,
-		MaxSize:    global.GloConfig.Logs.MaxSize,
-		MaxBackups: global.GloConfig.Logs.MaxBackups,
-		MaxAge:     global.GloConfig.Logs.MaxAge,
-		Compress:   global.GloConfig.Logs.Compress,
+		Filename:   config.GloConfig.Logs.Path,
+		MaxSize:    config.GloConfig.Logs.MaxSize,
+		MaxBackups: config.GloConfig.Logs.MaxBackups,
+		MaxAge:     config.GloConfig.Logs.MaxAge,
+		Compress:   config.GloConfig.Logs.Compress,
 	})
 
 	// 控制台写入器

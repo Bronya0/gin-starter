@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gin-starter/internal/api"
 	"gin-starter/internal/api/v1/auth"
+	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"gin-starter/internal/middle"
 	"gin-starter/internal/utils"
@@ -19,7 +20,7 @@ import (
 
 // InitServer 加载配置文件的端口，启动gin服务，同时初始化路由
 func InitServer() {
-	cfg := global.GloConfig.Server
+	cfg := config.GloConfig.Server
 	router := CreateRouter() //
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 	srv := &http.Server{
@@ -65,7 +66,7 @@ func CommonRouter() *gin.Engine {
 	var r *gin.Engine
 
 	// 根据配置文件的debug初始化gin路由
-	if global.GloConfig.Server.Debug == false {
+	if config.GloConfig.Server.Debug == false {
 		//【生产模式】
 		// 禁用 gin 记录接口访问日志，
 		gin.SetMode(gin.ReleaseMode)

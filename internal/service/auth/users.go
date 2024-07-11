@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"gin-starter/internal/utils"
 	"go.uber.org/zap"
@@ -71,7 +72,7 @@ func (u *UsersModel) OauthLoginToken(userId int64, token string, expiresAt int64
 	//所以这里只判断无错误即可，判断影响行数的话，>=0 都是ok的
 	if global.DB.Exec(sql, userId, token, time.Unix(expiresAt, 0).Format(time.DateTime), clientIp, userId, token).Error == nil {
 		// 异步缓存用户有效的token到redis
-		//if global.GloConfig.Jwt.GetInt("Token.IsCacheToRedis") == 1 {
+		//if config.GloConfig.Jwt.GetInt("Token.IsCacheToRedis") == 1 {
 		//	go u.ValidTokenCacheToRedis(userId)
 		//}
 		return true
@@ -84,7 +85,7 @@ func (u *UsersModel) OauthRefreshConditionCheck(userId int64, oldToken string) b
 	// 首先判断旧token在本系统自带的数据库已经存在，才允许继续执行刷新逻辑
 	var oldTokenIsExists int
 	sql := "SELECT count(*)  as  counts FROM  web.tb_oauth_access_tokens  WHERE fr_user_id =? and token=? and NOW() < (expires_at + cast(? as interval)) "
-	refreshSec := global.GloConfig.Jwt.JwtTokenRefreshAllowSec
+	refreshSec := config.GloConfig.Jwt.JwtTokenRefreshAllowSec
 	if global.DB.Raw(sql, userId, oldToken, strconv.FormatInt(refreshSec, 10)+" second").First(&oldTokenIsExists).Error == nil && oldTokenIsExists == 1 {
 		return true
 	}
@@ -150,7 +151,7 @@ func (u *UsersModel) OauthCheckTokenIsOk(userId int64, token string) bool {
 		WHERE   fr_user_id=?  AND  revoked=0  AND  expires_at> now()
 		ORDER  BY   expires_at  DESC , updated_at  DESC limit ?
 	`
-	maxOnlineUsers := global.GloConfig.Jwt.JwtTokenOnlineUsers
+	maxOnlineUsers := config.GloConfig.Jwt.JwtTokenOnlineUsers
 	rows, err := global.DB.Raw(sql, userId, maxOnlineUsers).Rows()
 	defer func() {
 		//  凡是查询类记得释放记录集
@@ -270,7 +271,7 @@ func (u *UsersModel) Destroy(id int) bool {
 //	defer tokenCacheRedisFact.ReleaseRedisConn()
 //
 //	sql := "SELECT   token,to_char(expires_at,'yyyy-mm-dd hh24:mi:ss') as expires_at  FROM  web.tb_oauth_access_tokens  WHERE   fr_user_id=?  AND  revoked=0  AND  expires_at>NOW() ORDER  BY  expires_at  DESC , updated_at  DESC  LIMIT ?"
-//	maxOnlineUsers := global.GloConfig.Jwt.JwtTokenOnlineUsers
+//	maxOnlineUsers := config.GloConfig.Jwt.JwtTokenOnlineUsers
 //	rows, err := u.Raw(sql, userId, maxOnlineUsers).Rows()
 //	defer func() {
 //		//  凡是获取原生结果集的查询，记得释放记录集

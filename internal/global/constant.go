@@ -1,7 +1,6 @@
 package global
 
 import (
-	"gin-starter/internal/config"
 	"github.com/casbin/casbin/v2"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -14,13 +13,11 @@ import (
 )
 
 var (
-	GloConfig *models.Config
-	Logger    *zap.SugaredLogger
-	DB        *gorm.DB
+	Logger *zap.SugaredLogger
+	DB     *gorm.DB
 
-	DateFormat = "2006-01-02 15:04:05" //  设置全局日期时间格式
-	Enforcer   *casbin.SyncedEnforcer
-	RootPath   = path.Dir(getCurrentAbPath())
+	Enforcer *casbin.SyncedEnforcer
+	RootPath = path.Dir(getCurrentAbPath())
 )
 
 // 这里定义的常量，一般是具有错误代码+错误说明组成，一般用于接口返回

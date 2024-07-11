@@ -8,6 +8,15 @@ import (
 	"strings"
 )
 
+// SuccessResponse 直接返回成功
+func SuccessResponse(c *gin.Context, msg string, data interface{}) {
+	ReturnJson(c, http.StatusOK, 2000, msg, data)
+}
+func ErrorResponse(c *gin.Context, msg string, data interface{}) {
+	ReturnJson(c, http.StatusOK, 5000, msg, nil)
+	c.Abort()
+}
+
 func ReturnJson(c *gin.Context, httpCode int, dataCode int, msg string, data interface{}) {
 
 	//c.Header("key2020","value2020")  	//可以根据实际情况在头部添加额外的其他信息
@@ -16,33 +25,6 @@ func ReturnJson(c *gin.Context, httpCode int, dataCode int, msg string, data int
 		"msg":  msg,
 		"data": data,
 	})
-}
-
-// Success 直接返回成功
-func Success(c *gin.Context, msg string, data interface{}) {
-	ReturnJson(c, http.StatusOK, 2000, msg, data)
-}
-
-// Fail 失败的业务逻辑
-func Fail(c *gin.Context, dataCode int, msg string, data interface{}) {
-	ReturnJson(c, http.StatusBadRequest, dataCode, msg, data)
-	c.Abort()
-}
-
-// ErrorSystem 系统执行代码错误
-func ErrorSystem(c *gin.Context, msg string, data interface{}) {
-	ReturnJson(c, http.StatusOK, 5000, "内部错误", data)
-	c.Abort()
-}
-
-func ErrorResponse(c *gin.Context, dataCode int, msg string) {
-	ReturnJson(c, http.StatusOK, dataCode, msg, nil)
-	c.Abort()
-}
-
-func UnauthorizedResponse(c *gin.Context, msg string) {
-	ReturnJson(c, http.StatusUnauthorized, 5000, msg, nil)
-	c.Abort()
 }
 
 func ValidatorError(c *gin.Context, err error) {

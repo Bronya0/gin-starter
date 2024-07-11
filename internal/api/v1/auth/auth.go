@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"gin-starter/internal/model/response"
 	"gin-starter/internal/service/auth"
@@ -43,9 +44,9 @@ func Register(c *gin.Context) {
 	pass := c.PostForm("pass")
 	userIp := c.ClientIP()
 	if usersCrudObj.Register(userName, pass, userIp) {
-		response.Success(c, global.CurdStatusOkMsg, "")
+		response.SuccessResponse(c, global.CurdStatusOkMsg, "")
 	} else {
-		response.Fail(c, global.CurdRegisterFailCode, global.CurdRegisterFailMsg, "")
+		response.ErrorResponse(c, global.CurdRegisterFailMsg, "")
 	}
 }
 
@@ -59,7 +60,7 @@ func Login(c *gin.Context) {
 
 	if userModel != nil {
 		userTokenFactory := jwt.CreateUserFactory()
-		if userToken, err := userTokenFactory.GenerateToken(userModel.Id, userModel.UserName, userModel.Phone, global.GloConfig.Jwt.JwtTokenCreatedExpireAt); err == nil {
+		if userToken, err := userTokenFactory.GenerateToken(userModel.Id, userModel.UserName, userModel.Phone, config.GloConfig.Jwt.JwtTokenCreatedExpireAt); err == nil {
 			if userTokenFactory.RecordLoginToken(userToken, c.ClientIP()) {
 				data := gin.H{
 					"userId":     userModel.Id,
@@ -69,13 +70,13 @@ func Login(c *gin.Context) {
 					"token":      userToken,
 					"updated_at": time.Now().Format(time.DateTime),
 				}
-				response.Success(c, global.CurdStatusOkMsg, data)
+				response.SuccessResponse(c, global.CurdStatusOkMsg, data)
 				go userModel.UpdateUserloginInfo(c.ClientIP(), userModel.Id)
 				return
 			}
 		}
 	}
-	response.Fail(c, global.CurdLoginFailCode, global.CurdLoginFailMsg, "")
+	response.ErrorResponse(c, global.CurdLoginFailMsg, "")
 }
 
 // RefreshToken 刷新用户token
@@ -85,9 +86,9 @@ func (u *Users) RefreshToken(c *gin.Context) {
 		res := gin.H{
 			"token": newToken,
 		}
-		response.Success(c, global.CurdStatusOkMsg, res)
+		response.SuccessResponse(c, global.CurdStatusOkMsg, res)
 	} else {
-		response.Fail(c, global.CurdRefreshTokenFailCode, global.CurdRefreshTokenFailMsg, "")
+		response.ErrorResponse(c, global.CurdRefreshTokenFailMsg, "")
 	}
 }
 
@@ -104,9 +105,9 @@ func Show(c *gin.Context) {
 	limitStart := (page - 1) * limit
 	counts, showlist := auth.CreateUserFactory("").Show(userName, int(limitStart), int(limit))
 	if counts > 0 && showlist != nil {
-		response.Success(c, global.CurdStatusOkMsg, gin.H{"counts": counts, "list": showlist})
+		response.SuccessResponse(c, global.CurdStatusOkMsg, gin.H{"counts": counts, "list": showlist})
 	} else {
-		response.Fail(c, global.CurdSelectFailCode, global.CurdSelectFailMsg, "")
+		response.ErrorResponse(c, global.CurdSelectFailMsg, "")
 	}
 }
 
@@ -119,9 +120,9 @@ func Store(c *gin.Context) {
 	remark := c.GetString(global.ValidatorPrefix + "remark")
 
 	if usersCrudObj.Store(userName, pass, realName, phone, remark) {
-		response.Success(c, global.CurdStatusOkMsg, "")
+		response.SuccessResponse(c, global.CurdStatusOkMsg, "")
 	} else {
-		response.Fail(c, global.CurdCreatFailCode, global.CurdCreatFailMsg, "")
+		response.ErrorResponse(c, global.CurdCreatFailMsg, "")
 	}
 }
 
@@ -138,16 +139,16 @@ func Update(c *gin.Context) {
 
 	// 检查正在修改的用户名是否被其他人使用
 	if auth.CreateUserFactory("").UpdateDataCheckUserNameIsUsed(int(userId), userName) > 0 {
-		response.Fail(c, global.CurdUpdateFailCode, global.CurdUpdateFailMsg+", "+userName+" 已经被其他人使用", "")
+		response.ErrorResponse(c, global.CurdUpdateFailMsg+", "+userName+" 已经被其他人使用", "")
 		return
 	}
 
 	//注意：这里没有实现更加精细的权限控制逻辑，例如：超级管理管理员可以更新全部用户数据，普通用户只能修改自己的数据。目前只是验证了token有效、合法之后就可以进行后续操作
 	// 实际使用请根据真是业务实现权限控制逻辑、再进行数据库操作
 	if usersCrudObj.Update(int(userId), userName, pass, realName, phone, remark, userIp) {
-		response.Success(c, global.CurdStatusOkMsg, "")
+		response.SuccessResponse(c, global.CurdStatusOkMsg, "")
 	} else {
-		response.Fail(c, global.CurdUpdateFailCode, global.CurdUpdateFailMsg, "")
+		response.ErrorResponse(c, global.CurdUpdateFailMsg, "")
 	}
 
 }
@@ -157,8 +158,8 @@ func Destroy(c *gin.Context) {
 	//表单参数验证中的int、int16、int32 、int64、float32、float64等数字键（字段），请统一使用 GetFloat64() 获取，其他函数无效
 	userId := c.GetFloat64(global.ValidatorPrefix + "id")
 	if auth.CreateUserFactory("").Destroy(int(userId)) {
-		response.Success(c, global.CurdStatusOkMsg, "")
+		response.SuccessResponse(c, global.CurdStatusOkMsg, "")
 	} else {
-		response.Fail(c, global.CurdDeleteFailCode, global.CurdDeleteFailMsg, "")
+		response.ErrorResponse(c, global.CurdDeleteFailMsg, "")
 	}
 }

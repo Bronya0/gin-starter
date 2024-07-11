@@ -1,4 +1,17 @@
-package models
+package config
+
+import (
+	"gin-starter/internal/global"
+	"gin-starter/internal/utils/config_util"
+)
+
+var (
+	GloConfig *Config
+)
+
+func init() {
+	config_util.InitConfig(global.RootPath+"/conf/conf.yaml", &GloConfig)
+}
 
 type Config struct {
 	Server    Server    `yaml:"server"`

@@ -1,4 +1,4 @@
-package utils
+package config_util
 
 import (
 	"encoding/json"
