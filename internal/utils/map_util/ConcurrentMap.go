@@ -1,4 +1,4 @@
-package utils
+package map_util
 
 import "sync"
 
