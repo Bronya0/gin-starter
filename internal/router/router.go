@@ -7,7 +7,6 @@ import (
 	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"gin-starter/internal/middle"
-	"gin-starter/internal/utils"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -74,7 +73,7 @@ func CommonRouter() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 		gin.DefaultWriter = io.Discard
 		r = gin.New()
-		r.Use(gin.Logger(), utils.CustomRecovery())
+		r.Use(gin.Logger(), middle.CustomRecovery())
 	} else {
 		// 【调试模式】
 		// 开启 pprof 包，便于开发阶段分析程序性能
@@ -92,7 +91,7 @@ func CommonRouter() *gin.Engine {
 func InitMiddleware(r *gin.Engine) {
 
 	//设置跨域，真正的跨域保护应该在网关层做
-	r.Use(utils.AccessCors())
+	r.Use(middle.AccessCors())
 
 	// swagger
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
