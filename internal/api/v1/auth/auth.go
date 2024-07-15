@@ -6,7 +6,7 @@ import (
 	"gin-starter/internal/model/response"
 	"gin-starter/internal/service/auth"
 	"gin-starter/internal/service/auth/jwt"
-	"gin-starter/internal/utils"
+	"gin-starter/internal/utils/hash"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -21,19 +21,19 @@ type UsersCurd struct {
 var usersCrudObj = UsersCurd{}
 
 func (u *UsersCurd) Register(userName, pass, userIp string) bool {
-	pass = utils.Base64Md5(pass) // 预先处理密码加密，然后存储在数据库
+	pass = hash.Base64Md5(pass) // 预先处理密码加密，然后存储在数据库
 	return u.userModel.Register(userName, pass, userIp)
 }
 
 func (u *UsersCurd) Store(name string, pass string, realName string, phone string, remark string) bool {
 
-	pass = utils.Base64Md5(pass) // 预先处理密码加密，然后存储在数据库
+	pass = hash.Base64Md5(pass) // 预先处理密码加密，然后存储在数据库
 	return u.userModel.Store(name, pass, realName, phone, remark)
 }
 
 func (u *UsersCurd) Update(id int, name string, pass string, realName string, phone string, remark string, clientIp string) bool {
 	//预先处理密码加密等操作，然后进行更新
-	pass = utils.Base64Md5(pass) // 预先处理密码加密，然后存储在数据库
+	pass = hash.Base64Md5(pass) // 预先处理密码加密，然后存储在数据库
 	return u.userModel.Update(id, name, pass, realName, phone, remark, clientIp)
 }
 

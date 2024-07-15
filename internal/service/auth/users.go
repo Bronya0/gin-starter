@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gin-starter/internal/config"
 	"gin-starter/internal/global"
-	"gin-starter/internal/utils"
+	"gin-starter/internal/utils/hash"
 	"go.uber.org/zap"
 	"strconv"
 	"time"
@@ -54,7 +54,7 @@ func (u *UsersModel) Login(userName string, pass string) *UsersModel {
 	result := global.DB.Raw(sql, userName).First(u)
 	if result.Error == nil {
 		// 账号密码验证成功
-		if len(u.Pass) > 0 && (u.Pass == utils.Base64Md5(pass)) {
+		if len(u.Pass) > 0 && (u.Pass == hash.Base64Md5(pass)) {
 			return u
 		}
 	} else {
