@@ -5,4 +5,7 @@ SET GOOS=windows
 SET GOARCH=amd64
 go mod tidy
 go build -o main.exe -ldflags "-w -s"  -trimpath main.go
+
+upx main.exe
+
 echo Compiled for Windows.
