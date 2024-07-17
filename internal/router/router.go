@@ -91,7 +91,7 @@ func CommonRouter() *gin.Engine {
 func InitMiddleware(r *gin.Engine) {
 
 	//设置跨域，真正的跨域保护应该在网关层做
-	r.Use(middle.AccessCors())
+	//r.Use(middle.AccessCors())
 
 	// swagger
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
