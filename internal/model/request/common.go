@@ -15,7 +15,7 @@ func (p *Pagination) Verify() error {
 	} else if p.PageNum == 0 {
 		p.PageNum = 1
 	}
-	if p.PageSize < 0 {
+	if p.PageSize < 0 || p.PageSize > 10000 {
 		return errors.New("pageSize err")
 	} else if p.PageSize == 0 {
 		p.PageSize = 10
