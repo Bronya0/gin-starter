@@ -7,7 +7,7 @@ Logs:
   Level: DEBUG
   Path: "./log/all.log"
   TextFormat: "console"                                #记录日志的格式，参数选项：console、json ， console 表示一般的文本格式
-  MaxSize: 10                                           #每个日志的最大尺寸(以MB为单位）， 超过该值，系统将会自动进行切割
+  MaxSize: 100                                           #每个日志的最大尺寸(以MB为单位）， 超过该值，系统将会自动进行切割
   MaxBackups: 7                                        #保留旧日志最大个数
   MaxAge: 15                                           #保留旧日志最大天数
   Compress: false                                      #日志备份时，是否进行压缩
