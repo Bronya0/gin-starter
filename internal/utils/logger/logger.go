@@ -2,50 +2,30 @@ package logger
 
 import (
 	"gin-starter/internal/config"
-	"gin-starter/internal/global"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
-	"os"
-	"time"
+	logging "github.com/donnie4w/go-logger/logger"
+)
+
+var (
+	Logger = InitLogger(config.GloConfig.Logs.Path)
 )
 
 // InitLogger pathFile: 日志全路径
-func InitLogger() {
-	// 文件写入器配置
-	fileWriter := zapcore.AddSync(&lumberjack.Logger{
-		Filename:   config.GloConfig.Logs.Path,
-		MaxSize:    config.GloConfig.Logs.MaxSize,
-		MaxBackups: config.GloConfig.Logs.MaxBackups,
-		MaxAge:     config.GloConfig.Logs.MaxAge,
-		Compress:   config.GloConfig.Logs.Compress,
+func InitLogger(path string) *logging.Logging {
+
+	logger := logging.NewLogger()
+	logger.SetOption(&logging.Option{
+		Level:     logging.LEVEL_INFO,
+		Console:   true, // 控制台输出
+		Format:    logging.FORMAT_LEVELFLAG | logging.FORMAT_SHORTFILENAME | logging.FORMAT_DATE | logging.FORMAT_MICROSECNDS,
+		Formatter: "{level} [{time}] {file}: {message}\n",
+		// size或者time模式
+		FileOption: &logging.FileTimeMode{ // 这里用时间切割
+			Filename:   path,             // 日志文件路径
+			Timemode:   logging.MODE_DAY, // 按天
+			Maxbuckup:  180,              // 最多备份日志文件数
+			IsCompress: true,             // 是否压缩
+		},
 	})
 
-	// 控制台写入器
-	consoleWriter := zapcore.AddSync(os.Stdout)
-
-	// 编码器配置
-	encoderConfig := zap.NewProductionEncoderConfig()
-	encoderConfig.EncodeTime = func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-		enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
-	}
-	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
-
-	// 创建两个编码器，一个用于文件，另一个用于控制台（这里为了演示使用了相同的配置，实际可以根据需求定制）
-	fileEncoder := zapcore.NewConsoleEncoder(encoderConfig)
-	consoleEncoder := zapcore.NewConsoleEncoder(encoderConfig)
-
-	// 创建两个核心，分别对应文件和控制台输出。指定日志下限
-	fileCore := zapcore.NewCore(fileEncoder, fileWriter, zap.InfoLevel)
-	consoleCore := zapcore.NewCore(consoleEncoder, consoleWriter, zap.InfoLevel)
-
-	// 使用zapcore.NewTee将两个核心合并
-	core := zapcore.NewTee(fileCore, consoleCore)
-
-	// 构建logger实例
-	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel)).Sugar() // error及以上的级别增加堆栈;
-
-	// 设置全局logger
-	global.Logger = logger
-	global.Logger.Info("日志初始化成功...")
+	return logger
 }

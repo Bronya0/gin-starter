@@ -2,11 +2,10 @@ package middle
 
 import (
 	"fmt"
-	"gin-starter/internal/global"
 	"gin-starter/internal/model/response"
+	"gin-starter/internal/utils/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 )
 
 // CustomRecovery 自定义错误(panic等)拦截中间件、对可能发生的错误进行拦截、统一记录
@@ -26,6 +25,6 @@ type PanicExceptionRecord struct{}
 func (p *PanicExceptionRecord) Write(b []byte) (n int, err error) {
 	errStr := string(b)
 	err = errors.New(errStr)
-	global.Logger.Error("内部错误", zap.String("errStrace", errStr))
+	logger.Logger.Error("内部错误", err)
 	return len(errStr), err
 }

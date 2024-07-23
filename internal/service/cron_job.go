@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"gin-starter/internal/global"
+	"gin-starter/internal/utils/logger"
 	"github.com/robfig/cron/v3"
 )
 
@@ -15,7 +15,7 @@ func InitCronJob() {
 	}
 	c.Start()
 
-	global.Logger.Info("定时任务加载成功...")
+	logger.Logger.Info("定时任务加载成功...")
 
 }
 

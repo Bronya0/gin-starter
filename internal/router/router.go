@@ -5,8 +5,8 @@ import (
 	"gin-starter/internal/api"
 	"gin-starter/internal/api/v1/auth"
 	"gin-starter/internal/config"
-	"gin-starter/internal/global"
 	"gin-starter/internal/middle"
+	"gin-starter/internal/utils/logger"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -31,9 +31,9 @@ func InitServer() {
 		WriteTimeout: 30 * time.Second,
 		IdleTimeout:  300 * time.Second,
 	}
-	global.Logger.Infof("欢迎主人！服务运行地址：http://%s\n", addr)
+	logger.Logger.Info("欢迎主人！服务运行地址：http://", addr)
 	//printRegisteredRoutes(router)
-	global.Logger.Error(srv.ListenAndServe().Error())
+	logger.Logger.Error(srv.ListenAndServe().Error())
 
 }
 
@@ -44,7 +44,7 @@ func printRegisteredRoutes(r *gin.Engine) {
 		// 输出路由信息
 		fmt.Printf("%s %s, ", route.Method, route.Path)
 	}
-	global.Logger.Info("")
+	logger.Logger.Info("")
 
 }
 

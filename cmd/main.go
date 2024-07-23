@@ -4,7 +4,6 @@ import (
 	"gin-starter/internal/router"
 	"gin-starter/internal/service"
 	"gin-starter/internal/utils/gorm"
-	"gin-starter/internal/utils/logger"
 	"gin-starter/internal/utils/validator_zh"
 )
 
@@ -13,8 +12,6 @@ import (
 //go:generate go mod tidy
 
 func main() {
-	// 初始化logger
-	logger.InitLogger()
 	// 连接数据库
 	gorm.InitDB()
 	// 初始化定时任务

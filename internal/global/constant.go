@@ -2,7 +2,6 @@ package global
 
 import (
 	"github.com/casbin/casbin/v2"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"log"
 	"os"
@@ -13,8 +12,7 @@ import (
 )
 
 var (
-	Logger *zap.SugaredLogger
-	DB     *gorm.DB
+	DB *gorm.DB
 
 	Enforcer *casbin.SyncedEnforcer
 	RootPath = path.Dir(getCurrentAbPath())

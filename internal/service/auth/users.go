@@ -5,7 +5,7 @@ import (
 	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"gin-starter/internal/utils/hash"
-	"go.uber.org/zap"
+	"gin-starter/internal/utils/logger"
 	"strconv"
 	"time"
 )
@@ -58,7 +58,7 @@ func (u *UsersModel) Login(userName string, pass string) *UsersModel {
 			return u
 		}
 	} else {
-		global.Logger.Error("根据账号查询单条记录出错:", zap.Error(result.Error))
+		logger.Logger.Error("根据账号查询单条记录出错:", result.Error)
 	}
 	return nil
 }
@@ -199,7 +199,7 @@ func (u *UsersModel) ShowOneItem(userId int) (*UsersModel, error) {
 func (u *UsersModel) counts(userName string) (counts int64) {
 	sql := "SELECT  count(*) as counts  FROM  web.tb_users  WHERE status=1 and   user_name like ?"
 	if res := global.DB.Raw(sql, "%"+userName+"%").First(&counts); res.Error != nil {
-		global.Logger.Error("UsersModel - counts 查询数据条数出错", zap.Error(res.Error))
+		logger.Logger.Error("UsersModel - counts 查询数据条数出错", res.Error)
 	}
 	return counts
 }
@@ -265,7 +265,7 @@ func (u *UsersModel) Destroy(id int) bool {
 //func (u *UsersModel) ValidTokenCacheToRedis(userId int64) {
 //	tokenCacheRedisFact := token_cache_redis.CreateUsersTokenCacheFactory(userId)
 //	if tokenCacheRedisFact == nil {
-//		global.Logger.Error("redis连接失败，请检查配置")
+//		logger.Logger.Error("redis连接失败，请检查配置")
 //		return
 //	}
 //	defer tokenCacheRedisFact.ReleaseRedisConn()
@@ -290,7 +290,7 @@ func (u *UsersModel) Destroy(id int) bool {
 //						tokenCacheRedisFact.SetUserTokenExpire(ts.Unix())
 //					}
 //				} else {
-//					global.Logger.Error("expires_at 转换位时间戳出错", zap.Error(err))
+//					logger.Logger.Error("expires_at 转换位时间戳出错", zap.Error(err))
 //				}
 //			}
 //		}
@@ -303,7 +303,7 @@ func (u *UsersModel) Destroy(id int) bool {
 //func (u *UsersModel) DelTokenCacheFromRedis(userId int64) {
 //	tokenCacheRedisFact := token_cache_redis.CreateUsersTokenCacheFactory(userId)
 //	if tokenCacheRedisFact == nil {
-//		global.Logger.Error("redis连接失败，请检查配置")
+//		logger.Logger.Error("redis连接失败，请检查配置")
 //		return
 //	}
 //	tokenCacheRedisFact.ClearUserToken()
