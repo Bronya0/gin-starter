@@ -37,16 +37,8 @@ type DB struct {
 }
 
 type Logs struct {
-	Level         string `yaml:"Level"`
-	TextFormat    string `yaml:"TextFormat"`
-	TimePrecision string `yaml:"TimePrecision"`
-	MaxSize       int    `yaml:"MaxSize"`
-	MaxBackups    int    `yaml:"MaxBackups"`
-	MaxAge        int    `yaml:"MaxAge"`
-	Compress      bool   `yaml:"Compress"`
-	AccessLog     string `yaml:"AccessLog"`
-	ErrorLog      string `yaml:"ErrorLog"`
-	Path          string `yaml:"Path"`
+	Level string `yaml:"Level"`
+	Path  string `yaml:"Path"`
 }
 
 type Redis struct {
