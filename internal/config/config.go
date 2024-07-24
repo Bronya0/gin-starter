@@ -32,6 +32,7 @@ type DB struct {
 	Type         string `yaml:"Type"`
 	DSN          string `yaml:"DSN"`
 	MaxLifetime  int    `yaml:"MaxLifetime"`
+	MaxIdletime  int    `yaml:"MaxIdletime"`
 	MaxOpenConns int    `yaml:"MaxOpenConns"`
 	MaxIdleConns int    `yaml:"MaxIdleConns"`
 }
@@ -39,6 +40,7 @@ type DB struct {
 type Logs struct {
 	Level string `yaml:"Level"`
 	Path  string `yaml:"Path"`
+	DbLog string `yaml:"DbLog"`
 }
 
 type Redis struct {

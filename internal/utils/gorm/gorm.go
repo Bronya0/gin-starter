@@ -18,12 +18,19 @@ func InitDB() {
 	logging.Logger.Info("数据库连接成功...")
 }
 
-func NewGormLogger() logger.Interface {
+func NewGormLogger(logFile string) logger.Interface {
+	file, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("Failed to open log file: %v", err)
+	}
+	defer file.Close() // 文件将在函数退出时自动关闭
+
+	// 使用os.File作为io.Writer
 	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		log.New(file, "\r\n", log.LstdFlags), // io writer
 		logger.Config{
 			SlowThreshold:             3 * time.Second, // Slow SQL threshold
-			LogLevel:                  logger.Silent,   // Log level
+			LogLevel:                  logger.Warn,     // Log level
 			IgnoreRecordNotFoundError: true,            // Ignore ErrRecordNotFound error for logger
 			ParameterizedQueries:      true,            // Don't include params in the SQL log
 			Colorful:                  false,           // Disable color
@@ -53,13 +60,16 @@ func GormMysql() *gorm.DB {
 	db, err := gorm.Open(mysql.New(mysqlConfig), &gorm.Config{
 		SkipDefaultTransaction: true, // 跳过默认事务，提高性能
 		PrepareStmt:            true, // 缓存预编译语句
-		Logger:                 NewGormLogger(),
+		Logger:                 NewGormLogger(config.GloConfig.Logs.DbLog),
 	})
 	if err != nil {
 		panic(err)
 	}
 	db.InstanceSet("gorm:table_options", "ENGINE=innodb")
+
 	sqlDB, _ := db.DB()
+	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(DbConfig.MaxIdletime))
+	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(DbConfig.MaxLifetime))
 	sqlDB.SetMaxIdleConns(DbConfig.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(DbConfig.MaxOpenConns)
 	return db
@@ -73,9 +83,9 @@ func GormPgSql() *gorm.DB {
 		PreferSimpleProtocol: false,
 	}
 	db, err := gorm.Open(postgres.New(pgsqlConfig), &gorm.Config{
-		SkipDefaultTransaction: true,            // 跳过默认事务，提高性能
-		PrepareStmt:            true,            // 缓存预编译语句
-		Logger:                 NewGormLogger(), //拦截、接管 gorm v2 自带日志
+		SkipDefaultTransaction: true,                                       // 跳过默认事务，提高性能
+		PrepareStmt:            true,                                       // 缓存预编译语句
+		Logger:                 NewGormLogger(config.GloConfig.Logs.DbLog), //拦截、接管 gorm v2 自带日志
 	})
 
 	if err != nil {
@@ -83,8 +93,8 @@ func GormPgSql() *gorm.DB {
 	}
 
 	sqlDB, _ := db.DB()
-	sqlDB.SetConnMaxIdleTime(time.Second * 30)
-	sqlDB.SetConnMaxLifetime(60 * time.Second)
+	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(DbConfig.MaxIdletime))
+	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(DbConfig.MaxLifetime))
 	sqlDB.SetMaxIdleConns(DbConfig.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(DbConfig.MaxOpenConns)
 	return db
