@@ -19,15 +19,22 @@ func InitDB() {
 }
 
 func NewGormLogger(logFile string) logger.Interface {
-	file, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("Failed to open log file: %v", err)
+
+	var writer logger.Writer
+	if config.GloConfig.Server.Debug {
+		writer = log.New(os.Stdout, "\r\n", log.LstdFlags)
+	} else {
+		file, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatalf("无法创建gorm日志: %v", err)
+		}
+		defer file.Close() // 文件将在函数退出时自动关闭
+		writer = log.New(file, "\r\n", log.LstdFlags)
 	}
-	defer file.Close() // 文件将在函数退出时自动关闭
 
 	// 使用os.File作为io.Writer
 	newLogger := logger.New(
-		log.New(file, "\r\n", log.LstdFlags), // io writer
+		writer,
 		logger.Config{
 			SlowThreshold:             3 * time.Second, // Slow SQL threshold
 			LogLevel:                  logger.Warn,     // Log level
