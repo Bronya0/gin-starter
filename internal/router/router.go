@@ -18,11 +18,11 @@ import (
 
 // InitServer 加载配置文件的端口，启动gin服务，同时初始化路由
 func InitServer() {
-	cfg := config.GloConfig.Server
 
 	// ===注册路由===
 	router := CreateRouter()
 
+	cfg := config.GloConfig.Server
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 	srv := &http.Server{
 		Addr:         addr,
@@ -73,7 +73,6 @@ func CommonRouter() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 		gin.DefaultWriter = io.Discard
 		r = gin.New()
-		r.Use(gin.Logger(), middle.CustomRecovery())
 	} else {
 		// 【调试模式】
 		// 开启 pprof 包，便于开发阶段分析程序性能
@@ -90,21 +89,24 @@ func CommonRouter() *gin.Engine {
 
 func InitMiddleware(r *gin.Engine) {
 
+	// 前置通用中间件
+	r.Use(
+		middle.GinLogger(),
+		middle.CustomRecovery(),
+		gzip.Gzip(gzip.DefaultCompression),
+		middle.SlowTimeMiddleware(),
+	)
+
 	//设置跨域，真正的跨域保护应该在网关层做
 	//r.Use(middle.AccessCors())
 
 	// swagger
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	// 开启gzip压缩
-	r.Use(gzip.Gzip(gzip.DefaultCompression))
-
 	// 代理静态文件
 	//http.Handle("/front/", http.FileServer(http.Dir("front/")))
 	//r.LoadHTMLGlob("front/*.tmpl")
 	//r.Static("front", "front")
-
-	r.Use(middle.SlowTimeMiddleware())
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

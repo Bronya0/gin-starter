@@ -25,6 +25,6 @@ type PanicExceptionRecord struct{}
 func (p *PanicExceptionRecord) Write(b []byte) (n int, err error) {
 	errStr := string(b)
 	err = errors.New(errStr)
-	logger.Logger.Error("内部错误", err)
+	logger.Logger.Error("【CustomRecovery】主协程内部错误：", err)
 	return len(errStr), err
 }
