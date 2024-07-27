@@ -23,7 +23,7 @@ func InitLogger(path string) *logging.Logging {
 			Filename:   path,             // 日志文件路径
 			Timemode:   logging.MODE_DAY, // 按天
 			Maxbuckup:  180,              // 最多备份日志文件数
-			IsCompress: true,             // 是否压缩
+			IsCompress: false,            // 是否压缩
 		},
 	})
 
