@@ -2,6 +2,7 @@ package global
 
 import (
 	"github.com/casbin/casbin/v2"
+	"github.com/go-resty/resty/v2"
 	"gorm.io/gorm"
 	"log"
 	"os"
@@ -14,8 +15,9 @@ import (
 var (
 	DB *gorm.DB
 
-	Enforcer *casbin.SyncedEnforcer
-	RootPath = path.Dir(getCurrentAbPath())
+	Enforcer   *casbin.SyncedEnforcer
+	RootPath   = path.Dir(getCurrentAbPath())
+	HttpClient = resty.New()
 )
 
 // 这里定义的常量，一般是具有错误代码+错误说明组成，一般用于接口返回
@@ -24,9 +26,9 @@ const (
 	ValidatorPrefix string = "Form_Validator_"
 
 	// JwtTokenOK token相关
-	JwtTokenOK        int    = 200100                      //token有效
-	JwtTokenInvalid   int    = -400100                     //无效的token
-	JwtTokenExpired   int    = -400101                     //过期的token
+	JwtTokenOK        int    = 200100                                  //token有效
+	JwtTokenInvalid   int    = -400100                                 //无效的token
+	JwtTokenExpired   int    = -400101                                 //过期的token
 	JwtTokenMustValid string = "token为必填项,请在请求header部分提交!" //提交的 token 格式错误
 
 	// CurdStatusOkMsg CURD 常用业务状态码
