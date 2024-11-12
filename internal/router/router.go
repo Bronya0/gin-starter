@@ -91,7 +91,7 @@ func InitMiddleware(r *gin.Engine) {
 
 	// 前置通用中间件
 	r.Use(
-		middle.GinLogger(),
+		//middle.GinLogger(),
 		middle.CustomRecovery(),
 		gzip.Gzip(gzip.DefaultCompression),
 		middle.SlowTimeMiddleware(),
