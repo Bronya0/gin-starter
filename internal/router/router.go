@@ -15,20 +15,19 @@ import (
 // InitServer 加载配置文件的端口，启动gin服务，同时初始化路由
 func InitServer() {
 
-	// ===注册路由===
-	router := CreateRouter()
+	engine := CreateEngine()
 
 	cfg := config.GloConfig.Server
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 	srv := &http.Server{
 		Addr:         addr,
-		Handler:      router,
+		Handler:      engine,
 		ReadTimeout:  60 * time.Second,
 		WriteTimeout: 60 * time.Second,
 		IdleTimeout:  300 * time.Second,
 	}
 	logger.Logger.Info("欢迎主人！服务运行地址：http://", addr)
-	//printRegisteredRoutes(router)
+	printRegisteredRoutes(engine)
 	logger.Logger.Error(srv.ListenAndServe().Error())
 
 }
@@ -41,12 +40,11 @@ func printRegisteredRoutes(r *gin.Engine) {
 		fmt.Printf("%s %s, ", route.Method, route.Path)
 	}
 	logger.Logger.Info("")
-
 }
 
-// CreateRouter 注册通用的路由
-func CreateRouter() *gin.Engine {
-	engine := createEngine()
+// CreateEngine 注册通用的路由
+func CreateEngine() *gin.Engine {
+	engine := Engine()
 	// 中间件
 	addMiddleware(engine)
 	// 通用路由
@@ -56,7 +54,7 @@ func CreateRouter() *gin.Engine {
 	return engine
 }
 
-func createEngine() *gin.Engine {
+func Engine() *gin.Engine {
 	var engine *gin.Engine
 
 	// 根据配置文件的debug初始化gin路由
