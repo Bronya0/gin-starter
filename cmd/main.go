@@ -3,8 +3,8 @@ package main
 import (
 	"gin-starter/internal/router"
 	"gin-starter/internal/service"
-	"gin-starter/internal/utils/gorm"
-	"gin-starter/internal/utils/validator_zh"
+	"gin-starter/internal/util/gorm"
+	"gin-starter/internal/util/validator_zh"
 )
 
 //go:generate go env -w GO111MODULE=on

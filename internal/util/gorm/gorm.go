@@ -3,7 +3,7 @@ package gorm
 import (
 	"gin-starter/internal/config"
 	"gin-starter/internal/global"
-	logging "gin-starter/internal/utils/logger"
+	logging "gin-starter/internal/util/logger"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

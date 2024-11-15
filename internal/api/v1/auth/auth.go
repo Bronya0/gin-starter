@@ -6,7 +6,7 @@ import (
 	"gin-starter/internal/model/response"
 	"gin-starter/internal/service/auth"
 	"gin-starter/internal/service/auth/jwt"
-	"gin-starter/internal/utils/hash"
+	"gin-starter/internal/util/hash"
 	"github.com/gin-gonic/gin"
 	"time"
 )

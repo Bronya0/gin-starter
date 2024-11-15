@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gin-starter/internal/config"
 	"gin-starter/internal/middle"
-	"gin-starter/internal/utils/logger"
+	"gin-starter/internal/util/logger"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"io"

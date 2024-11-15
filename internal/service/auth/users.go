@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"gin-starter/internal/config"
 	"gin-starter/internal/global"
-	"gin-starter/internal/utils/hash"
-	"gin-starter/internal/utils/logger"
+	"gin-starter/internal/util/hash"
+	"gin-starter/internal/util/logger"
 	"strconv"
 	"time"
 )

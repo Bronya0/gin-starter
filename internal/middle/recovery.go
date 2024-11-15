@@ -3,7 +3,7 @@ package middle
 import (
 	"fmt"
 	"gin-starter/internal/model/response"
-	"gin-starter/internal/utils/logger"
+	"gin-starter/internal/util/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )

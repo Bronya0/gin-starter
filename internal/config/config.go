@@ -2,7 +2,7 @@ package config
 
 import (
 	"gin-starter/internal/global"
-	"gin-starter/internal/utils/config_util"
+	"gin-starter/internal/util/config_util"
 )
 
 var (

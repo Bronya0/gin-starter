@@ -2,7 +2,7 @@ package config_util
 
 import (
 	"fmt"
-	"gin-starter/internal/utils/file"
+	"gin-starter/internal/util/file"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )

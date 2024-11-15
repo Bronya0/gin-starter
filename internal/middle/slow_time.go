@@ -2,7 +2,7 @@ package middle
 
 import (
 	"fmt"
-	"gin-starter/internal/utils/logger"
+	"gin-starter/internal/util/logger"
 	"github.com/gin-gonic/gin"
 	"time"
 )

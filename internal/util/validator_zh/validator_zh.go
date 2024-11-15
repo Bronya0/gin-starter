@@ -2,7 +2,7 @@ package validator_zh
 
 import (
 	"fmt"
-	"gin-starter/internal/utils/logger"
+	"gin-starter/internal/util/logger"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"

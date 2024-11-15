@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"gin-starter/internal/utils/logger"
+	"gin-starter/internal/util/logger"
 	"github.com/robfig/cron/v3"
 )
 

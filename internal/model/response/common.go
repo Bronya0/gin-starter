@@ -1,7 +1,7 @@
 package response
 
 import (
-	"gin-starter/internal/utils/validator_zh"
+	"gin-starter/internal/util/validator_zh"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
