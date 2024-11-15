@@ -49,14 +49,14 @@ func NewGormLogger(logFile string) logger.Interface {
 func InitGorm(DbType string) *gorm.DB {
 	switch DbType {
 	case "mysql":
-		return GormMysql()
+		return Mysql()
 	case "pgsql":
-		return GormPgSql()
+		return PgSql()
 	default:
-		return GormPgSql()
+		return PgSql()
 	}
 }
-func GormMysql() *gorm.DB {
+func Mysql() *gorm.DB {
 	DbConfig := config.GloConfig.DB
 
 	mysqlConfig := mysql.Config{
@@ -82,7 +82,7 @@ func GormMysql() *gorm.DB {
 	return db
 }
 
-func GormPgSql() *gorm.DB {
+func PgSql() *gorm.DB {
 	DbConfig := config.GloConfig.DB
 
 	pgsqlConfig := postgres.Config{
