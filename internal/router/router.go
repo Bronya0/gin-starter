@@ -50,21 +50,16 @@ func printRegisteredRoutes(r *gin.Engine) {
 
 // CreateRouter 注册通用的路由
 func CreateRouter() *gin.Engine {
-
-	// 注册通用路由
-	r := CommonRouter()
-
+	engine := createEngine()
 	// 注册中间件
-	InitMiddleware(r)
-
+	addMiddleware(engine)
 	// 注册自定义路由
-	CustomRouter(r)
-
-	return r
+	addRouter(engine)
+	return engine
 }
 
-func CommonRouter() *gin.Engine {
-	var r *gin.Engine
+func createEngine() *gin.Engine {
+	var engine *gin.Engine
 
 	// 根据配置文件的debug初始化gin路由
 	if config.GloConfig.Server.Debug == false {
@@ -72,22 +67,22 @@ func CommonRouter() *gin.Engine {
 		// 禁用 gin 记录接口访问日志，
 		gin.SetMode(gin.ReleaseMode)
 		gin.DefaultWriter = io.Discard
-		r = gin.New()
+		engine = gin.New()
 	} else {
 		// 【调试模式】
 		// 开启 pprof 包，便于开发阶段分析程序性能
-		r = gin.Default()
+		engine = gin.Default()
 		gin.ForceConsoleColor()
 
 		// pprof
 		//http://localhost:8001/debug/pprof
 		//pprof.Register(r)
 	}
-	return r
+	return engine
 
 }
 
-func InitMiddleware(r *gin.Engine) {
+func addMiddleware(r *gin.Engine) {
 
 	// 前置通用中间件
 	r.Use(
