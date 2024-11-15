@@ -27,8 +27,8 @@ func InitServer() {
 	srv := &http.Server{
 		Addr:         addr,
 		Handler:      router,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 30 * time.Second,
+		ReadTimeout:  60 * time.Second,
+		WriteTimeout: 60 * time.Second,
 		IdleTimeout:  300 * time.Second,
 	}
 	logger.Logger.Info("欢迎主人！服务运行地址：http://", addr)
