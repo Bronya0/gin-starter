@@ -16,7 +16,7 @@ func InitLogger(path string) *logging.Logging {
 	logger.SetOption(&logging.Option{
 		Level:     logging.LEVEL_INFO,
 		Console:   true, // 控制台输出
-		Format:    logging.FORMAT_LEVELFLAG | logging.FORMAT_SHORTFILENAME | logging.FORMAT_DATE | logging.FORMAT_MICROSECNDS,
+		Format:    logging.FORMAT_LEVELFLAG | logging.FORMAT_SHORTFILENAME | logging.FORMAT_DATE | logging.FORMAT_MICROSECONDS,
 		Formatter: "{level} [{time}] {file}: {message}\n",
 		// size或者time模式
 		FileOption: &logging.FileTimeMode{ // 这里用时间切割

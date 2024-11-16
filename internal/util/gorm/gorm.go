@@ -70,7 +70,7 @@ func Mysql() *gorm.DB {
 		Logger:                 NewGormLogger(config.GloConfig.Logs.DbLog),
 	})
 	if err != nil {
-		panic(err)
+		logging.Log.Error(err)
 	}
 	db.InstanceSet("gorm:table_options", "ENGINE=innodb")
 
@@ -96,7 +96,7 @@ func PgSql() *gorm.DB {
 	})
 
 	if err != nil {
-		panic(err)
+		logging.Log.Error(err)
 	}
 
 	sqlDB, _ := db.DB()

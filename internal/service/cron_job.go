@@ -1,9 +1,9 @@
 package service
 
 import (
-	"fmt"
 	"gin-starter/internal/util/logger"
 	"github.com/robfig/cron/v3"
+	"log"
 )
 
 func InitCronJob() {
@@ -20,5 +20,5 @@ func InitCronJob() {
 }
 
 func PrintJob() {
-	fmt.Println("主人你好")
+	log.Println("主人你好,定时任务运行...")
 }

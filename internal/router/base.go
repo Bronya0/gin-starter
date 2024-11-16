@@ -2,8 +2,6 @@ package router
 
 import (
 	"gin-starter/internal/api"
-	"gin-starter/internal/api/v1/auth"
-	"gin-starter/internal/middle"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -33,13 +31,10 @@ func addBaseRouter(r *gin.Engine) *gin.Engine {
 	r.GET("/father", api.TestGorm)
 
 	// 注册
-	r.POST("/register", auth.Register)
+	//r.POST("/register", auth.Register)
 
 	// 登录接口
-	r.POST("/login", auth.Login)
-
-	// JWT认证中间件
-	r.Use(middle.CheckTokenAuth())
+	//r.POST("/login", auth.Login)
 
 	r.GET("/auth", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
