@@ -15,7 +15,6 @@ import (
 
 func InitDB() {
 	global.DB = InitGorm(config.GloConfig.DB.Type)
-	logging.Log.Info("数据库连接成功...")
 }
 
 func NewGormLogger(logFile string) logger.Interface {
@@ -71,6 +70,8 @@ func Mysql() *gorm.DB {
 	})
 	if err != nil {
 		logging.Log.Error(err)
+	} else {
+		logging.Log.Info("数据库连接成功...")
 	}
 	db.InstanceSet("gorm:table_options", "ENGINE=innodb")
 
@@ -97,6 +98,8 @@ func PgSql() *gorm.DB {
 
 	if err != nil {
 		logging.Log.Error(err)
+	} else {
+		logging.Log.Info("数据库连接成功...")
 	}
 
 	sqlDB, _ := db.DB()

@@ -1,7 +1,6 @@
 package global
 
 import (
-	"github.com/casbin/casbin/v2"
 	"github.com/go-resty/resty/v2"
 	"gorm.io/gorm"
 	"log"
@@ -12,7 +11,6 @@ import (
 var (
 	DB *gorm.DB
 
-	Enforcer   *casbin.SyncedEnforcer
 	RootPath   = path.Dir(getWorkDir())
 	HttpClient = resty.New()
 )

@@ -4,8 +4,6 @@ import (
 	"gin-starter/internal/api"
 	"gin-starter/internal/api/v1/auth"
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"time"
 )
@@ -14,9 +12,6 @@ func addAccessRouter(r *gin.Engine) *gin.Engine {
 
 	//设置跨域，真正的跨域保护应该在网关层做
 	//r.Use(middle.AccessCors())
-
-	// swagger
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// 代理静态文件
 	//http.Handle("/front/", http.FileServer(http.Dir("front/")))
