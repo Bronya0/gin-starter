@@ -5,7 +5,6 @@ import (
 	"gin-starter/internal/config"
 	"gin-starter/internal/middle"
 	"gin-starter/internal/util/logger"
-	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
@@ -88,7 +87,6 @@ func addMiddleware(r *gin.Engine) {
 	r.Use(
 		//middle.GinLogger(),
 		middle.CustomRecovery(),
-		gzip.Gzip(gzip.DefaultCompression),
 		middle.SlowTimeMiddleware(),
 	)
 

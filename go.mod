@@ -5,11 +5,10 @@ go 1.23.2
 require (
 	github.com/donnie4w/go-logger v0.27.0
 	github.com/fsnotify/fsnotify v1.8.0
-	github.com/gin-contrib/gzip v1.0.1
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
-	github.com/go-playground/validator/v10 v10.20.0
+	github.com/go-playground/validator/v10 v10.23.0
 	github.com/go-resty/resty/v2 v2.16.0
 	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/pkg/errors v0.9.1
