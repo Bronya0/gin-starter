@@ -56,16 +56,8 @@ type Redis struct {
 }
 
 type Jwt struct {
-	JwtTokenSignKey         string `yaml:"JwtTokenSignKey"`
-	JwtTokenOnlineUsers     int    `yaml:"JwtTokenOnlineUsers"`
-	JwtTokenCreatedExpireAt int64  `yaml:"JwtTokenCreatedExpireAt"`
-	JwtTokenRefreshAllowSec int64  `yaml:"JwtTokenRefreshAllowSec"`
-	JwtTokenRefreshExpireAt int    `yaml:"JwtTokenRefreshExpireAt"`
-	BindcKeyName            string `yaml:"BindcKeyName"`
-	IsCacheToRedis          int    `yaml:"IsCacheToRedis"`
-	ExpiresTime             string `mapstructure:"ExpiresTime" json:"ExpiresTime" yaml:"ExpiresTime"` // 过期时间
-	BufferTime              string `mapstructure:"BufferTime" json:"BufferTime" yaml:"BufferTime"`    // 缓冲时间
-	Issuer                  string `mapstructure:"Issuer" json:"Issuer" yaml:"Issuer"`                // 签发者
+	JwtTokenSignKey string `yaml:"JwtTokenSignKey"`
+	ExpiresTime     string `json:"ExpiresTime" yaml:"ExpiresTime"` // 过期时间
 }
 
 type Websocket struct {

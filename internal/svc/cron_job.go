@@ -1,4 +1,4 @@
-package service
+package svc
 
 import (
 	"gin-starter/internal/util/logger"

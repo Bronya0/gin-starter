@@ -44,14 +44,18 @@ func printRegisteredRoutes(r *gin.Engine) {
 
 // CreateEngine 注册通用的路由
 func CreateEngine() *gin.Engine {
-	engine := Engine()
-	// 中间件
-	addMiddleware(engine)
-	// 通用路由
-	addBaseRouter(engine)
-	// 自定义路由...
+	r := Engine()
 
-	return engine
+	//放中间件前的路由,无需认证
+	addAccessRouter(r)
+
+	// 中间件
+	addMiddleware(r)
+
+	// 业务路由...需要认证
+	addAuthRouter(r)
+
+	return r
 }
 
 func Engine() *gin.Engine {
@@ -87,5 +91,8 @@ func addMiddleware(r *gin.Engine) {
 		gzip.Gzip(gzip.DefaultCompression),
 		middle.SlowTimeMiddleware(),
 	)
+
+	// jwt
+	r.Use(middle.JWTAuthMiddleware())
 
 }

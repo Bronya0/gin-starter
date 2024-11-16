@@ -2,6 +2,7 @@ package router
 
 import (
 	"gin-starter/internal/api"
+	"gin-starter/internal/api/v1/auth"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -9,7 +10,7 @@ import (
 	"time"
 )
 
-func addBaseRouter(r *gin.Engine) *gin.Engine {
+func addAccessRouter(r *gin.Engine) *gin.Engine {
 
 	//设置跨域，真正的跨域保护应该在网关层做
 	//r.Use(middle.AccessCors())
@@ -30,18 +31,11 @@ func addBaseRouter(r *gin.Engine) *gin.Engine {
 
 	r.GET("/father", api.TestGorm)
 
+	// 登录获取JWT
+	r.POST("/login", auth.Login)
+
 	// 注册
 	//r.POST("/register", auth.Register)
-
-	// 登录接口
-	//r.POST("/login", auth.Login)
-
-	r.GET("/auth", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"title": "欢迎主人访问授权接口",
-		})
-	})
-	// 测试demo路由
 
 	return r
 }

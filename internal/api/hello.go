@@ -2,7 +2,7 @@ package api
 
 import (
 	"gin-starter/internal/global"
-	"gin-starter/internal/model/response"
+	"gin-starter/internal/model/resp"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -24,7 +24,7 @@ func HelloPost(c *gin.Context) {
 	var r RegisterRequest
 	err := c.ShouldBindJSON(&r)
 	if err != nil {
-		response.ValidatorError(c, err)
+		resp.Error(c, err.Error(), nil)
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
@@ -49,7 +49,7 @@ func TestGorm(c *gin.Context) {
 	var fathersWithSons []FatherReq
 	var pager Page
 	if err := c.ShouldBind(&pager); err != nil {
-		response.ValidatorError(c, err)
+		resp.Error(c, err.Error(), nil)
 		return
 	}
 	page := pager.Page
