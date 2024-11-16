@@ -20,7 +20,7 @@ func InitValidator(locale string) {
 	if err := InitTrans(locale); err != nil {
 		panic(err)
 	}
-	logger.Logger.Info("验证器初始化并本土化成功...")
+	logger.Log.Info("验证器初始化并本土化成功...")
 }
 
 // InitTrans 初始化表单参数验证器的翻译器

@@ -15,7 +15,7 @@ func InitCronJob() {
 	}
 	c.Start()
 
-	logger.Logger.Info("定时任务加载成功...")
+	logger.Log.Info("定时任务加载成功...")
 
 }
 

@@ -7,16 +7,13 @@ import (
 	"log"
 	"os"
 	"path"
-	"path/filepath"
-	"runtime"
-	"strings"
 )
 
 var (
 	DB *gorm.DB
 
 	Enforcer   *casbin.SyncedEnforcer
-	RootPath   = path.Dir(getCurrentAbPath())
+	RootPath   = path.Dir(getWorkDir())
 	HttpClient = resty.New()
 )
 
@@ -26,9 +23,9 @@ const (
 	ValidatorPrefix string = "Form_Validator_"
 
 	// JwtTokenOK token相关
-	JwtTokenOK        int    = 200100                                  //token有效
-	JwtTokenInvalid   int    = -400100                                 //无效的token
-	JwtTokenExpired   int    = -400101                                 //过期的token
+	JwtTokenOK        int    = 200100                      //token有效
+	JwtTokenInvalid   int    = -400100                     //无效的token
+	JwtTokenExpired   int    = -400101                     //过期的token
 	JwtTokenMustValid string = "token为必填项,请在请求header部分提交!" //提交的 token 格式错误
 
 	// CurdStatusOkMsg CURD 常用业务状态码
@@ -53,41 +50,10 @@ const (
 	CSTLayout = "2006-01-02 15:04:05"
 )
 
-// 最终方案-全兼容
-func getCurrentAbPath() string {
-	dir := getCurrentAbPathByExecutable()
-	if strings.Contains(dir, getTmpDir()) {
-		return getCurrentAbPathByCaller()
-	}
-	return dir
-}
-
-// 获取系统临时目录，兼容go run
-func getTmpDir() string {
-	dir := os.Getenv("TEMP")
-	if dir == "" {
-		dir = os.Getenv("TMP")
-	}
-	res, _ := filepath.EvalSymlinks(dir)
-	return res
-}
-
-// 获取当前执行文件绝对路径
-func getCurrentAbPathByExecutable() string {
-	exePath, err := os.Executable()
+func getWorkDir() string {
+	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, _ := filepath.EvalSymlinks(filepath.Dir(exePath))
-	return res
-}
-
-// 获取当前执行文件绝对路径（go run）
-func getCurrentAbPathByCaller() string {
-	var abPath string
-	_, filename, _, ok := runtime.Caller(0)
-	if ok {
-		abPath = path.Dir(filename)
-	}
-	return abPath
+	return wd
 }

@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	Logger = InitLogger(config.GloConfig.Logs.Path)
+	Log = InitLogger(config.GloConfig.Logs.Path)
 )
 
 // InitLogger pathFile: 日志全路径

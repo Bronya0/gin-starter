@@ -26,9 +26,9 @@ func InitServer() {
 		WriteTimeout: 60 * time.Second,
 		IdleTimeout:  300 * time.Second,
 	}
-	logger.Logger.Info("欢迎主人！服务运行地址：http://", addr)
+	logger.Log.Info("欢迎主人！服务运行地址：http://", addr)
 	printRegisteredRoutes(engine)
-	logger.Logger.Error(srv.ListenAndServe().Error())
+	logger.Log.Error(srv.ListenAndServe().Error())
 
 }
 
@@ -39,7 +39,7 @@ func printRegisteredRoutes(r *gin.Engine) {
 		// 输出路由信息
 		fmt.Printf("%s %s, ", route.Method, route.Path)
 	}
-	logger.Logger.Info("")
+	logger.Log.Info("")
 }
 
 // CreateEngine 注册通用的路由
@@ -59,13 +59,13 @@ func Engine() *gin.Engine {
 
 	// 根据配置文件的debug初始化gin路由
 	if config.GloConfig.Server.Debug == false {
-		//【生产模式】
+		logger.Log.Info("【生产模式】")
 		// 禁用 gin 记录接口访问日志，
 		gin.SetMode(gin.ReleaseMode)
 		gin.DefaultWriter = io.Discard
 		engine = gin.New()
 	} else {
-		// 【调试模式】
+		logger.Log.Info("【调试模式】")
 		// 开启 pprof 包，便于开发阶段分析程序性能
 		engine = gin.Default()
 		gin.ForceConsoleColor()

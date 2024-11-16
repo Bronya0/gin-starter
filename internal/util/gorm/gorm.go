@@ -15,7 +15,7 @@ import (
 
 func InitDB() {
 	global.DB = InitGorm(config.GloConfig.DB.Type)
-	logging.Logger.Info("数据库连接成功...")
+	logging.Log.Info("数据库连接成功...")
 }
 
 func NewGormLogger(logFile string) logger.Interface {

@@ -16,7 +16,7 @@ func SlowTimeMiddleware() gin.HandlerFunc {
 		latency := endTime.Sub(startTime)
 
 		if latency.Seconds() > 1 { // 设置阈值，超过1秒则认为是慢接口
-			logger.Logger.Warn(fmt.Sprintf("【慢接口】%v %v %v", c.Request.Method, c.Request.URL, latency))
+			logger.Log.Warn(fmt.Sprintf("【慢接口】%v %v %v", c.Request.Method, c.Request.URL, latency))
 		}
 	}
 }
