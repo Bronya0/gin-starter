@@ -1,0 +1,42 @@
+server:
+  debug: false
+  host: 127.0.0.1
+  port: 8001
+
+Logs:
+  Level: DEBUG
+  Path: "./log/all.log"
+  DbLog: "./log/gorm.log"
+
+DB:
+  Type: pgsql
+  DSN: "host=127.0.0.1 port=5432 user=postgres dbname=postgres password=123456t sslmode=disable TimeZone=Asia/Shanghai"
+  MaxLifetime: 36000           # 设置连接可以重用的最长时间(单位：秒)
+  MaxIdletime: 3600           # 设置连接可以重用的最长时间(单位：秒)
+  MaxOpenConns: 200           # 设置数据库的最大打开连接数
+  MaxIdleConns: 100            # 设置空闲连接池中的最大连接数
+
+
+Jwt:
+  JwtTokenSignKey: "我是jwt 秘钥"    #设置token生成时加密的签名
+  ExpiresTime: 48h  # 设置token过期时间，最大支持h
+
+Websocket: #该服务与Http具有相同的ip、端口，因此不需要额外设置端口
+  Start: 0                            #默认不启动该服务（1=启动；0=不启动）
+  WriteReadBufferSize: 20480          # 读写缓冲区分配字节，大概能存储 6800 多一点的文字
+  MaxMessageSize: 65535               # 从消息管道读取消息的最大字节
+  PingPeriod: 20                      #心跳包频率，单位：秒
+  HeartbeatFailMaxTimes: 4            # 允许心跳失败的最大次数（默认设置为PingPeriod=30秒检测一次，连续4次没有心跳就会清除后端在线信息）
+  ReadDeadline: 100                   # 客户端在线情况下，正常的业务消息间隔秒数必须小于该值，否则服务器将会主动断开，该值不能小于心跳频率*允许失败次数,单位：秒。 0 表示不设限制，即服务器不主动断开不发送任何消息的在线客户端，但会消耗服务器资源
+  WriteDeadline: 35                   # 消息单次写入超时时间，单位：秒
+
+Redis:
+  Host: "127.0.0.1"
+  Port: 6379
+  Auth: ""
+  MaxIdle: 10
+  MaxActive: 1000
+  IdleTimeout: 60
+  IndexDb: 1      # 注意 redis 默认连接的是 1 号数据库，不是 0号数据库
+  ConnFailRetryTimes: 3    #从连接池获取连接失败，最大重试次数
+  ReConnectInterval: 1     # 从连接池获取连接失败，每次重试之间间隔的秒数

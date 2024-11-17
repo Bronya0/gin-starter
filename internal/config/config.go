@@ -1,8 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"gin-starter/internal/global"
 	"gin-starter/internal/util/config_util"
+	"path/filepath"
 )
 
 var (
@@ -10,7 +12,8 @@ var (
 )
 
 func init() {
-	config_util.InitConfig(global.RootPath+"/conf/conf.yaml", &GloConfig)
+	fmt.Println(global.RootPath)
+	config_util.InitConfig(filepath.Join(global.RootPath, "conf", "dev.yaml"), &GloConfig)
 }
 
 type Config struct {

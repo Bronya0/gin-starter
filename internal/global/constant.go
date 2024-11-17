@@ -5,13 +5,12 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"os"
-	"path"
 )
 
 var (
 	DB *gorm.DB
 
-	RootPath   = path.Dir(getWorkDir())
+	RootPath   = getWorkDir()
 	HttpClient = resty.New()
 )
 

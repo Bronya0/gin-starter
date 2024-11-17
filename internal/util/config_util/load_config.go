@@ -13,6 +13,7 @@ func InitConfig[T any](configPath string, Config T) {
 	if !file.IsExist(configPath) {
 		panic(fmt.Errorf("配置文件不存在: %s \n", configPath))
 	}
+
 	v := viper.New()
 	v.SetConfigFile(configPath)
 	v.SetConfigType("yaml")
@@ -31,5 +32,5 @@ func InitConfig[T any](configPath string, Config T) {
 	if err = v.Unmarshal(&Config); err != nil {
 		panic(err)
 	}
-	fmt.Println("配置加载成功...")
+	fmt.Println("配置加载成功...", configPath)
 }
