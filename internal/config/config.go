@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"gin-starter/internal/global"
 	"gin-starter/internal/util/config_util"
+	"log"
+	"os"
 	"path/filepath"
 )
 
@@ -12,8 +14,14 @@ var (
 )
 
 func init() {
-	fmt.Println(global.RootPath)
-	config_util.InitConfig(filepath.Join(global.RootPath, "conf", "dev.yaml"), &GloConfig)
+	//通过环境变量读取配置文件
+	envConf := os.Getenv("ENV-CONF")
+	if envConf == "" {
+		envConf = "dev"
+	}
+	log.Println("读取环境变量 ENV-CONF: ", envConf)
+	conf := filepath.Join(global.RootPath, "conf", fmt.Sprintf("%s.yaml", envConf))
+	config_util.InitConfig(conf, &GloConfig)
 }
 
 type Config struct {

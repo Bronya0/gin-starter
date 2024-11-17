@@ -5,6 +5,7 @@ import (
 	"gin-starter/internal/util/file"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
+	"log"
 )
 
 // InitConfig 将配置文件映射城结构体
@@ -32,5 +33,5 @@ func InitConfig[T any](configPath string, Config T) {
 	if err = v.Unmarshal(&Config); err != nil {
 		panic(err)
 	}
-	fmt.Println("配置加载成功...", configPath)
+	log.Println("配置加载成功...", configPath)
 }
