@@ -32,7 +32,7 @@ func GenToken(username string) (string, error) {
 		username, // 自定义的用户名字段
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenExpire)),
-			Issuer:    "my-project", // 签发人
+			Issuer:    "gin-starter", // 签发人
 		},
 	}
 	// 使用指定的签名方法创建签名对象

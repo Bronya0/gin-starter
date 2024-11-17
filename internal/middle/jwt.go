@@ -21,12 +21,14 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 			resp.ErrorAuth(c)
 			return
 		}
-		// parts[1]是获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它
+		// parts[1]是获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它；也会自动校验过期时间
 		payload, err := svc.ParseToken(parts[1])
 		if err != nil {
 			resp.ErrorAuth(c)
 			return
 		}
+		//可以在这里添加一些操作，比如从数据库中查询用户信息……
+
 		// 将当前请求的username信息保存到请求的上下文c上
 		c.Set("username", payload.Username)
 		c.Next()
