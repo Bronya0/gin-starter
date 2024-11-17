@@ -1,4 +1,4 @@
-package logger
+package glog
 
 import (
 	"gin-starter/internal/config"

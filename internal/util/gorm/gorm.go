@@ -3,7 +3,7 @@ package gorm
 import (
 	"gin-starter/internal/config"
 	"gin-starter/internal/global"
-	logging "gin-starter/internal/util/logger"
+	"gin-starter/internal/util/glog"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -14,7 +14,11 @@ import (
 )
 
 func InitDB() {
-	global.DB = InitGorm(config.GloConfig.DB.Type)
+	if config.GloConfig.DB.Enable {
+		global.DB = InitGorm(config.GloConfig.DB.Type)
+	} else {
+		glog.Log.Warn("数据库未启用...")
+	}
 }
 
 func NewGormLogger(logFile string) logger.Interface {
@@ -25,7 +29,7 @@ func NewGormLogger(logFile string) logger.Interface {
 	} else {
 		file, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			log.Fatalf("无法创建gorm日志: %v", err)
+			glog.Log.Fatalf("无法创建gorm日志: %v", err)
 		}
 		defer file.Close() // 文件将在函数退出时自动关闭
 		writer = log.New(file, "\r\n", log.LstdFlags)
@@ -69,9 +73,9 @@ func Mysql() *gorm.DB {
 		Logger:                 NewGormLogger(config.GloConfig.Logs.DbLog),
 	})
 	if err != nil {
-		logging.Log.Error(err)
+		glog.Log.Error(err)
 	} else {
-		logging.Log.Info("数据库连接成功...")
+		glog.Log.Info("数据库连接成功...")
 	}
 	db.InstanceSet("gorm:table_options", "ENGINE=innodb")
 
@@ -97,9 +101,9 @@ func PgSql() *gorm.DB {
 	})
 
 	if err != nil {
-		logging.Log.Error(err)
+		glog.Log.Error(err)
 	} else {
-		logging.Log.Info("数据库连接成功...")
+		glog.Log.Info("数据库连接成功...")
 	}
 
 	sqlDB, _ := db.DB()

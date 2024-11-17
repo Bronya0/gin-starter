@@ -3,7 +3,7 @@ package middle
 import (
 	"fmt"
 	"gin-starter/internal/model/resp"
-	"gin-starter/internal/util/logger"
+	"gin-starter/internal/util/glog"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )
@@ -25,6 +25,6 @@ type PanicExceptionRecord struct{}
 func (p *PanicExceptionRecord) Write(b []byte) (n int, err error) {
 	errStr := string(b)
 	err = errors.New(errStr)
-	logger.Log.Error("【CustomRecovery】主协程内部错误：", err)
+	glog.Log.Error("【CustomRecovery】主协程内部错误：", err)
 	return len(errStr), err
 }

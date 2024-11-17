@@ -2,7 +2,7 @@ package middle
 
 import (
 	"fmt"
-	"gin-starter/internal/util/logger"
+	"gin-starter/internal/util/glog"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,11 +16,11 @@ func GinLogger() gin.HandlerFunc {
 
 		// 记录日志
 		if statusCode >= 500 {
-			logger.Log.Error(fmt.Sprintf("【GinLogger】Method: %s, URL: %s, Status: %d", method, url, statusCode))
+			glog.Log.Error(fmt.Sprintf("【GinLogger】Method: %s, URL: %s, Status: %d", method, url, statusCode))
 		} else if statusCode >= 400 {
-			logger.Log.Warn(fmt.Sprintf("【GinLogger】Method: %s, URL: %s, Status: %d", method, url, statusCode))
+			glog.Log.Warn(fmt.Sprintf("【GinLogger】Method: %s, URL: %s, Status: %d", method, url, statusCode))
 		} else {
-			logger.Log.Info(fmt.Sprintf("【GinLogger】Method: %s, URL: %s, Status: %d", method, url, statusCode))
+			glog.Log.Info(fmt.Sprintf("【GinLogger】Method: %s, URL: %s, Status: %d", method, url, statusCode))
 		}
 
 		// 继续执行后续的中间件和路由

@@ -4,7 +4,7 @@ import (
 	"gin-starter/internal/model/auth"
 	"gin-starter/internal/model/resp"
 	"gin-starter/internal/svc"
-	"gin-starter/internal/util/logger"
+	"gin-starter/internal/util/glog"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,7 +22,7 @@ func Login(c *gin.Context) {
 		// 生成Token
 		tokenString, err := svc.GenToken(login.Username)
 		if err != nil {
-			logger.Log.Error("生成token失败", err)
+			glog.Log.Error("生成token失败", err)
 			return
 		}
 		resp.Success(c, "登录成功", gin.H{"token": tokenString})

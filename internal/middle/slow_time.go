@@ -2,7 +2,7 @@ package middle
 
 import (
 	"fmt"
-	"gin-starter/internal/util/logger"
+	"gin-starter/internal/util/glog"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -16,7 +16,7 @@ func SlowTimeMiddleware() gin.HandlerFunc {
 		latency := endTime.Sub(startTime)
 
 		if latency.Seconds() > 1 { // 设置阈值，超过1秒则认为是慢接口
-			logger.Log.Warn(fmt.Sprintf("【慢接口】%v %v %v", c.Request.Method, c.Request.URL, latency))
+			glog.Log.Warn(fmt.Sprintf("【慢接口】%v %v %v", c.Request.Method, c.Request.URL, latency))
 		}
 	}
 }

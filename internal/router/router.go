@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gin-starter/internal/config"
 	"gin-starter/internal/middle"
-	"gin-starter/internal/util/logger"
+	"gin-starter/internal/util/glog"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
@@ -25,9 +25,8 @@ func InitServer() {
 		WriteTimeout: 60 * time.Second,
 		IdleTimeout:  300 * time.Second,
 	}
-	logger.Log.Info("欢迎主人！服务运行地址：http://", addr)
-	printRegisteredRoutes(engine)
-	logger.Log.Error(srv.ListenAndServe().Error())
+	glog.Log.Info("欢迎主人！服务运行地址：http://", addr)
+	glog.Log.Error(srv.ListenAndServe().Error())
 
 }
 
@@ -38,7 +37,6 @@ func printRegisteredRoutes(r *gin.Engine) {
 		// 输出路由信息
 		fmt.Printf("%s %s, ", route.Method, route.Path)
 	}
-	logger.Log.Info("")
 }
 
 // CreateEngine 注册通用的路由
@@ -62,13 +60,13 @@ func Engine() *gin.Engine {
 
 	// 根据配置文件的debug初始化gin路由
 	if config.GloConfig.Server.Debug == false {
-		logger.Log.Info("【生产模式】")
+		glog.Log.Info("【生产模式】")
 		// 禁用 gin 记录接口访问日志，
 		gin.SetMode(gin.ReleaseMode)
 		gin.DefaultWriter = io.Discard
 		engine = gin.New()
 	} else {
-		logger.Log.Info("【调试模式】")
+		glog.Log.Info("【调试模式】")
 		// 开启 pprof 包，便于开发阶段分析程序性能
 		engine = gin.Default()
 		gin.ForceConsoleColor()

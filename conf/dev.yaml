@@ -9,6 +9,7 @@ Logs:
   DbLog: "./log/gorm.log"
 
 DB:
+  Enable: false
   Type: pgsql
   DSN: "host=127.0.0.1 port=5432 user=postgres dbname=postgres password=123456t sslmode=disable TimeZone=Asia/Shanghai"
   MaxLifetime: 36000           # 设置连接可以重用的最长时间(单位：秒)

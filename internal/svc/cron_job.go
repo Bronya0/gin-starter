@@ -1,9 +1,8 @@
 package svc
 
 import (
-	"gin-starter/internal/util/logger"
+	"gin-starter/internal/util/glog"
 	"github.com/robfig/cron/v3"
-	"log"
 )
 
 func InitCronJob() {
@@ -15,10 +14,10 @@ func InitCronJob() {
 	}
 	c.Start()
 
-	logger.Log.Info("定时任务加载成功...")
+	glog.Log.Info("定时任务加载成功...")
 
 }
 
 func PrintJob() {
-	log.Println("主人你好,定时任务运行...")
+	glog.Log.Info("主人你好,定时任务运行...")
 }

@@ -40,6 +40,7 @@ type Server struct {
 }
 
 type DB struct {
+	Enable       bool   `yaml:"Enable"`
 	Type         string `yaml:"Type"`
 	DSN          string `yaml:"DSN"`
 	MaxLifetime  int    `yaml:"MaxLifetime"`
