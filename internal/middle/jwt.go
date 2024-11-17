@@ -27,8 +27,6 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 			resp.ErrorAuth(c)
 			return
 		}
-		//可以在这里添加一些操作，比如从数据库中查询用户信息……
-
 		// 将当前请求的username信息保存到请求的上下文c上
 		c.Set("username", payload.Username)
 		c.Next()
