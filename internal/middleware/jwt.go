@@ -1,4 +1,4 @@
-package middle
+package middleware
 
 import (
 	"gin-starter/internal/model/resp"

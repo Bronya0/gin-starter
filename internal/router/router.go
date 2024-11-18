@@ -3,7 +3,7 @@ package router
 import (
 	"fmt"
 	"gin-starter/internal/config"
-	"gin-starter/internal/middle"
+	"gin-starter/internal/middleware"
 	"gin-starter/internal/util/glog"
 	"github.com/gin-gonic/gin"
 	"io"
@@ -84,11 +84,11 @@ func addMiddleware(r *gin.Engine) {
 	// 前置通用中间件
 	r.Use(
 		//middle.GinLogger(),
-		middle.CustomRecovery(),
-		middle.SlowTimeMiddleware(),
+		middleware.CustomRecovery(),
+		middleware.SlowTimeMiddleware(),
 	)
 
 	// jwt
-	r.Use(middle.JWTAuthMiddleware())
+	r.Use(middleware.JWTAuthMiddleware())
 
 }
