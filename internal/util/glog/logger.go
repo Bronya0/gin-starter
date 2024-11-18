@@ -17,7 +17,7 @@ func InitLogger(path string) *logging.Logging {
 		Level:     logging.LEVEL_INFO,
 		Console:   true, // 控制台输出
 		Format:    logging.FORMAT_LEVELFLAG | logging.FORMAT_SHORTFILENAME | logging.FORMAT_DATE | logging.FORMAT_MICROSECONDS,
-		Formatter: "[{time}] {level} {file}: {message}\n",
+		Formatter: "[{time}][{level}]{file}: {message}\n",
 		// size或者time模式
 		FileOption: &logging.FileTimeMode{ // 这里用时间切割
 			Filename:   path,             // 日志文件路径
