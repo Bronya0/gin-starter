@@ -1,4 +1,4 @@
-package svc
+package service
 
 import (
 	"gin-starter/internal/util/glog"

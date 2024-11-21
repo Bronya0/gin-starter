@@ -2,7 +2,7 @@ package main
 
 import (
 	"gin-starter/internal/router"
-	"gin-starter/internal/svc"
+	"gin-starter/internal/service"
 	"gin-starter/internal/util/gorm"
 	"gin-starter/internal/util/validator_zh"
 )
@@ -15,7 +15,7 @@ func main() {
 	// 连接数据库
 	gorm.InitDB()
 	// 初始化定时任务
-	svc.InitCronJob()
+	service.InitCronJob()
 	// 初始化校验器，并本地化，zh/en
 	validator_zh.InitValidator("zh")
 	// 注册路由，启动gin服务

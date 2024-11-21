@@ -3,7 +3,7 @@ package auth
 import (
 	"gin-starter/internal/model/auth"
 	"gin-starter/internal/model/resp"
-	"gin-starter/internal/svc"
+	"gin-starter/internal/service"
 	"gin-starter/internal/util/glog"
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +20,7 @@ func Login(c *gin.Context) {
 	// 密码可能是哈希值
 	if login.Username == "admin" && login.Password == "admin123" {
 		// 生成Token
-		tokenString, err := svc.GenToken(login.Username)
+		tokenString, err := service.GenToken(login.Username)
 		if err != nil {
 			glog.Log.Error("生成token失败", err)
 			return
