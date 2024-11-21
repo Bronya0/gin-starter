@@ -1,4 +1,4 @@
-package util
+package valid
 
 import (
 	"encoding/json"

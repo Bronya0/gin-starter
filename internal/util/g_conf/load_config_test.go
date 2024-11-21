@@ -1,4 +1,4 @@
-package config_util
+package g_conf
 
 import (
 	"encoding/json"

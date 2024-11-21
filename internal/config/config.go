@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 	"gin-starter/internal/global"
-	"gin-starter/internal/util/config_util"
+	"gin-starter/internal/util/g_conf"
 	"log"
 	"os"
 	"path/filepath"
@@ -21,7 +21,7 @@ func init() {
 	}
 	log.Println("读取环境变量 ENV-CONF: ", envConf)
 	conf := filepath.Join(global.RootPath, "conf", fmt.Sprintf("%s.yaml", envConf))
-	config_util.InitConfig(conf, &GloConfig)
+	g_conf.InitConfig(conf, &GloConfig)
 }
 
 type Config struct {
