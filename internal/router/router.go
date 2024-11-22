@@ -83,7 +83,7 @@ func addMiddleware(r *gin.Engine) {
 
 	// 前置通用中间件
 	r.Use(
-		//middle.GinLogger(),
+		middleware.ErrorLogger(),
 		middleware.CustomRecovery(),
 		middleware.SlowTimeMiddleware(),
 	)
