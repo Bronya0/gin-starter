@@ -83,11 +83,11 @@ func addMiddleware(r *gin.Engine) {
 
 	// 中间件
 	r.Use(
+		// jwt
+		middleware.JWTAuthMiddleware(),
 		middleware.ErrorLogger(),
 		middleware.CustomRecovery(),
 		middleware.SlowTimeMiddleware(),
-		// jwt
-		middleware.JWTAuthMiddleware(),
 	)
 
 }
