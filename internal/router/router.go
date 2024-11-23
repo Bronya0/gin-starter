@@ -81,6 +81,7 @@ func Engine() *gin.Engine {
 
 func addMiddleware(r *gin.Engine) {
 	if config.GloConfig.Server.Debug == false {
+		glog.Log.Info("【生产模式】开启jwt认证")
 		r.Use(middleware.JWTAuthMiddleware())
 	}
 	r.Use(
