@@ -80,11 +80,10 @@ func Engine() *gin.Engine {
 }
 
 func addMiddleware(r *gin.Engine) {
-
-	// 中间件
+	if config.GloConfig.Server.Debug == false {
+		r.Use(middleware.JWTAuthMiddleware())
+	}
 	r.Use(
-		// jwt
-		middleware.JWTAuthMiddleware(),
 		middleware.ErrorLogger(),
 		middleware.CustomRecovery(),
 		middleware.SlowTimeMiddleware(),
