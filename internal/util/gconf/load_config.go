@@ -1,4 +1,4 @@
-package g_conf
+package gconf
 
 import (
 	"fmt"

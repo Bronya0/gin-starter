@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 	"gin-starter/internal/global"
-	"gin-starter/internal/util/g_conf"
+	"gin-starter/internal/util/gconf"
 	"log"
 	"os"
 	"path/filepath"
@@ -15,13 +15,13 @@ var (
 
 func init() {
 	//通过环境变量读取配置文件
-	envConf := os.Getenv("ENV-CONF")
+	envConf := os.Getenv("GIN_CONF")
 	if envConf == "" {
 		envConf = "dev"
 	}
-	log.Println("读取环境变量 ENV-CONF: ", envConf)
+	log.Println("读取环境变量 GIN_CONF: ", envConf)
 	conf := filepath.Join(global.RootPath, "conf", fmt.Sprintf("%s.yaml", envConf))
-	g_conf.InitConfig(conf, &GloConfig)
+	gconf.InitConfig(conf, &GloConfig)
 }
 
 type Config struct {
