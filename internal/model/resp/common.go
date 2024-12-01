@@ -23,7 +23,7 @@ func Error(c *gin.Context, msg string, data interface{}) {
 }
 func ErrorAuth(c *gin.Context) {
 	c.JSON(http.StatusUnauthorized, gin.H{
-		"code": 4000,
+		"code": 4001,
 		"msg":  "认证不通过",
 		"data": nil,
 	})
