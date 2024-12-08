@@ -2,7 +2,7 @@ package gconf
 
 import (
 	"fmt"
-	"gin-starter/internal/util/file"
+	"gin-starter/internal/util/fileutil"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"log"
@@ -11,7 +11,7 @@ import (
 // InitConfig 将配置文件映射城结构体
 func InitConfig[T any](configPath string, Config T) {
 	// 判断文件是否存在
-	if !file.IsExist(configPath) {
+	if !fileutil.IsExist(configPath) {
 		panic(fmt.Errorf("配置文件不存在: %s \n", configPath))
 	}
 
