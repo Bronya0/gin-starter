@@ -5,6 +5,7 @@ import (
 	"gin-starter/internal/config"
 	"gin-starter/internal/middleware"
 	"gin-starter/internal/util/glog"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
@@ -67,13 +68,10 @@ func Engine() *gin.Engine {
 		engine = gin.New()
 	} else {
 		glog.Log.Info("【调试模式】")
-		// 开启 pprof 包，便于开发阶段分析程序性能
 		engine = gin.Default()
 		gin.ForceConsoleColor()
-
-		// pprof
-		//http://localhost:8001/debug/pprof
-		//pprof.Register(r)
+		// pprof http://localhost:8001/debug/pprof
+		pprof.Register(engine)
 	}
 	return engine
 
