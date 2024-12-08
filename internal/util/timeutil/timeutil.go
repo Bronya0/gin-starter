@@ -58,33 +58,33 @@ func AddYear(t time.Time, year int64) time.Time {
 
 // GetNowDate return format yyyy-mm-dd of current date.
 func GetNowDate() string {
-	return time.Now().Format("2006-01-02")
+	return time.Now().Format(time.DateOnly)
 }
 
 // GetNowTime return format hh-mm-ss of current time.
 func GetNowTime() string {
-	return time.Now().Format("15:04:05")
+	return time.Now().Format(time.TimeOnly)
 }
 
 // GetNowDateTime return format yyyy-mm-dd hh-mm-ss of current datetime.
 func GetNowDateTime() string {
-	return time.Now().Format("2006-01-02 15:04:05")
+	return time.Now().Format(time.DateTime)
 }
 
 // GetTodayStartTime return the start time of today, format: yyyy-mm-dd 00:00:00.
 func GetTodayStartTime() string {
-	return time.Now().Format("2006-01-02") + " 00:00:00"
+	return time.Now().Format(time.DateOnly) + " 00:00:00"
 }
 
 // GetTodayEndTime return the end time of today, format: yyyy-mm-dd 23:59:59.
 func GetTodayEndTime() string {
-	return time.Now().Format("2006-01-02") + " 23:59:59"
+	return time.Now().Format(time.DateOnly) + " 23:59:59"
 }
 
 // GetZeroHourTimestamp return timestamp of zero hour (timestamp of 00:00).
 func GetZeroHourTimestamp() int64 {
-	ts := time.Now().Format("2006-01-02")
-	t, _ := time.Parse("2006-01-02", ts)
+	ts := time.Now().Format(time.DateOnly)
+	t, _ := time.Parse(time.DateOnly, ts)
 	return t.UTC().Unix() - 8*3600
 }
 
@@ -430,9 +430,8 @@ func NewUnixNow() int64 {
 
 // NewFormatUnix return unix timestamp of specified time string, t should be "yyyy-mm-dd hh:mm:ss".
 func NewFormatUnix(t string) (int64, error) {
-	timeLayout := "2006-01-02 15:04:05"
 	loc := time.FixedZone("CST", 8*3600)
-	tt, err := time.ParseInLocation(timeLayout, t, loc)
+	tt, err := time.ParseInLocation(time.DateTime, t, loc)
 	if err != nil {
 		return 0, err
 	}
@@ -450,7 +449,7 @@ func ISO8601ToUnix(iso8601 string) (int64, error) {
 
 // UnixFormat return the time string 'yyyy-mm-dd hh:mm:ss' of unix time.
 func UnixFormat(unix int64) string {
-	return time.Unix(unix, 0).Format("2006-01-02 15:04:05")
+	return time.Unix(unix, 0).Format(time.DateTime)
 }
 
 // UnixFormatForTpl return the time string which format is specified tpl.
