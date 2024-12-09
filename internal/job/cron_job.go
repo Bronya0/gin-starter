@@ -1,4 +1,4 @@
-package service
+package job
 
 import (
 	"gin-starter/internal/util/glog"
