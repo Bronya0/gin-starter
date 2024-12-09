@@ -2,7 +2,7 @@ package gconf
 
 import (
 	"fmt"
-	"gin-starter/internal/util/fileutil"
+	"github.com/duke-git/lancet/v2/fileutil"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"log"
