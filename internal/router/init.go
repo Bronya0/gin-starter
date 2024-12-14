@@ -43,16 +43,12 @@ func printRegisteredRoutes(r *gin.Engine) {
 // CreateEngine 注册通用的路由
 func CreateEngine() *gin.Engine {
 	r := Engine()
-
 	// 放中间件前的路由,无需认证
-	addAccessRouter(r)
-
+	addPublicRouter(r)
 	// 中间件
 	addMiddleware(r)
-
 	// 业务路由...需要认证
-	addRouter(r)
-
+	addAuthRouter(r)
 	return r
 }
 

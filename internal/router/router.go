@@ -8,7 +8,8 @@ import (
 	"time"
 )
 
-func addAccessRouter(r *gin.Engine) *gin.Engine {
+// addPublicRouter  公开的路由
+func addPublicRouter(r *gin.Engine) *gin.Engine {
 
 	// 设置跨域，真正的跨域保护应该在网关层做
 	// r.Use(middle.AccessCors())
@@ -18,30 +19,36 @@ func addAccessRouter(r *gin.Engine) *gin.Engine {
 	// r.LoadHTMLGlob("front/*.tmpl")
 	// r.Static("front", "front")
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"love you": time.Now().Format(time.DateTime),
+	publicApi := r.Group("/api/public")
+	{
+		publicApi.GET("/", func(c *gin.Context) {
+			c.JSON(http.StatusOK, gin.H{
+				"love you": time.Now().Format(time.DateTime),
+			})
 		})
-	})
 
-	r.GET("/father", api.TestGorm)
+		publicApi.GET("/father", api.TestGorm)
 
-	// 登录获取JWT
-	r.POST("/login", auth.Login)
+		// 登录获取JWT
+		publicApi.POST("/login", auth.Login)
+		// 注册
+		// r.POST("/register", auth.Register)
 
-	// 注册
-	// r.POST("/register", auth.Register)
+	}
 
 	return r
 }
 
-func addRouter(r *gin.Engine) *gin.Engine {
-
-	r.GET("/a", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"love you": time.Now().Format(time.DateTime),
+// addAuthRouter 需要认证的路由
+func addAuthRouter(r *gin.Engine) *gin.Engine {
+	authApi := r.Group("/api/v1")
+	{
+		authApi.GET("/", func(c *gin.Context) {
+			c.JSON(http.StatusOK, gin.H{
+				"love you": time.Now().Format(time.DateTime),
+			})
 		})
-	})
+	}
 
 	return r
 }
