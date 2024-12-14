@@ -27,7 +27,6 @@ func InitServer() {
 		IdleTimeout:  time.Duration(cfg.IdleTimeout) * time.Second,
 	}
 	glog.Log.Info("欢迎主人！服务运行地址：http://", addr)
-	glog.Log.Infof("%+v", srv)
 	glog.Log.Error(srv.ListenAndServe().Error())
 
 }
