@@ -22,11 +22,12 @@ func InitServer() {
 	srv := &http.Server{
 		Addr:         addr,
 		Handler:      engine,
-		ReadTimeout:  60 * time.Second,
-		WriteTimeout: 60 * time.Second,
-		IdleTimeout:  300 * time.Second,
+		ReadTimeout:  time.Duration(cfg.ReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(cfg.WriteTimeout) * time.Second,
+		IdleTimeout:  time.Duration(cfg.IdleTimeout) * time.Second,
 	}
 	glog.Log.Info("欢迎主人！服务运行地址：http://", addr)
+	glog.Log.Infof("%+v", srv)
 	glog.Log.Error(srv.ListenAndServe().Error())
 
 }

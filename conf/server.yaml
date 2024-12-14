@@ -2,6 +2,9 @@ server:
   debug: true
   host: 127.0.0.1
   port: 8001
+  ReadTimeout: 60     # 读取请求的超时时间
+  WriteTimeout: 60    # 写入响应的超时时间
+  IdleTimeout: 300    #  keep-alive 超时时间
 
 Logs:
   Level: DEBUG

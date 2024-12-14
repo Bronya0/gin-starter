@@ -1,11 +1,8 @@
 package config
 
 import (
-	"fmt"
 	"gin-starter/internal/global"
 	"gin-starter/internal/util/gconf"
-	"log"
-	"os"
 	"path/filepath"
 )
 
@@ -14,13 +11,8 @@ var (
 )
 
 func init() {
-	//通过环境变量读取配置文件
-	envConf := os.Getenv("GIN_CONF")
-	if envConf == "" {
-		envConf = "dev"
-	}
-	log.Println("读取环境变量 GIN_CONF: ", envConf)
-	conf := filepath.Join(global.RootPath, "conf", fmt.Sprintf("%s.yaml", envConf))
+	confFile := "server.yaml"
+	conf := filepath.Join(global.RootPath, "conf", confFile)
 	gconf.InitConfig(conf, &GloConfig)
 }
 
@@ -34,9 +26,12 @@ type Config struct {
 }
 
 type Server struct {
-	Debug bool   `yaml:"debug"`
-	Host  string `yaml:"host"`
-	Port  int    `yaml:"port"`
+	Debug        bool   `yaml:"debug"`
+	Host         string `yaml:"host"`
+	Port         int    `yaml:"port"`
+	ReadTimeout  int    `yaml:"ReadTimeout"`
+	WriteTimeout int    `yaml:"WriteTimeout"`
+	IdleTimeout  int    `yaml:"IdleTimeout"`
 }
 
 type DB struct {
