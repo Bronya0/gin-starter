@@ -44,7 +44,7 @@ func printRegisteredRoutes(r *gin.Engine) {
 func CreateEngine() *gin.Engine {
 	r := Engine()
 
-	//放中间件前的路由,无需认证
+	// 放中间件前的路由,无需认证
 	addAccessRouter(r)
 
 	// 中间件
