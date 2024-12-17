@@ -51,15 +51,15 @@ type Logs struct {
 }
 
 type Redis struct {
-	Port               int    `yaml:"Port"`
-	Auth               string `yaml:"Auth"`
-	MaxIdle            int    `yaml:"MaxIdle"`
-	ReConnectInterval  int    `yaml:"ReConnectInterval"`
-	Host               string `yaml:"Host"`
-	MaxActive          int    `yaml:"MaxActive"`
-	IdleTimeout        int    `yaml:"IdleTimeout"`
-	IndexDb            int    `yaml:"IndexDb"`
-	ConnFailRetryTimes int    `yaml:"ConnFailRetryTimes"`
+	Host         string `yaml:"host"`
+	Port         int    `yaml:"port"`
+	Password     string `yaml:"password"`
+	DB           int    `yaml:"db"`
+	MaxIdle      int    `yaml:"maxIdle"`
+	MaxActive    int    `yaml:"maxActive"`
+	IdleTimeout  int    `yaml:"idleTimeout"`
+	PoolSize     int    `yaml:"poolSize"`
+	MinIdleConns int    `yaml:"minIdleConns"`
 }
 
 type Jwt struct {

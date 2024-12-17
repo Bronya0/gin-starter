@@ -34,13 +34,13 @@ Websocket: #该服务与Http具有相同的ip、端口，因此不需要额外�
   ReadDeadline: 100                   # 客户端在线情况下，正常的业务消息间隔秒数必须小于该值，否则服务器将会主动断开，该值不能小于心跳频率*允许失败次数,单位：秒。 0 表示不设限制，即服务器不主动断开不发送任何消息的在线客户端，但会消耗服务器资源
   WriteDeadline: 35                   # 消息单次写入超时时间，单位：秒
 
-Redis:
-  Host: "127.0.0.1"
-  Port: 6379
-  Auth: ""
-  MaxIdle: 10
-  MaxActive: 1000
-  IdleTimeout: 60
-  IndexDb: 1      # 注意 redis 默认连接的是 1 号数据库，不是 0号数据库
-  ConnFailRetryTimes: 3    #从连接池获取连接失败，最大重试次数
-  ReConnectInterval: 1     # 从连接池获取连接失败，每次重试之间间隔的秒数
+redis:
+  host: localhost
+  port: 6379
+  password: ""
+  db: 0
+  maxIdle: 10
+  maxActive: 100
+  idleTimeout: 300
+  poolSize: 100
+  minIdleConns: 5
