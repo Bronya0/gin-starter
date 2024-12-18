@@ -13,7 +13,7 @@ import (
 // 如果想要保存更多信息，都可以添加到这个结构体中
 type CustomClaims struct {
 	// 可根据需要自行添加字段
-	Username             string `json:"username"`
+	UserID               string `json:"user_id"`
 	jwt.RegisteredClaims        // 内嵌标准的声明
 }
 
@@ -21,7 +21,7 @@ type CustomClaims struct {
 var CustomSecret = []byte(config.GloConfig.Jwt.JwtTokenSignKey)
 
 // GenToken 生成JWT
-func GenToken(username string) (string, error) {
+func GenToken(userID string) (string, error) {
 	// TokenExpireDuration jwt token 的过期时间
 	tokenExpire, err := time.ParseDuration(config.GloConfig.Jwt.ExpiresTime)
 	if err != nil {
@@ -29,7 +29,7 @@ func GenToken(username string) (string, error) {
 	}
 	// 创建一个我们自己的声明
 	claims := CustomClaims{
-		username, // 自定义的用户名字段
+		userID, // 自定义的用户名字段
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenExpire)),
 			Issuer:    "gin-starter", // 签发人

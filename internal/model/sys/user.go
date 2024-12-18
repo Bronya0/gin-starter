@@ -2,11 +2,6 @@ package sys
 
 import "time"
 
-type Login struct {
-	Username string `form:"username" json:"username" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
-}
-
 type AuthUser struct {
 	Id            string    `gorm:"column:id;type:SERIAL;primaryKey;" json:"id"`
 	Username      string    `gorm:"column:username;type:VARCHAR(64);not null;" json:"username"`

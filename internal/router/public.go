@@ -30,7 +30,7 @@ func addPublicRouter(r *gin.Engine) *gin.Engine {
 		publicApi.GET("/father", api.TestGorm)
 
 		// 登录获取JWT
-		publicApi.POST("/login", auth.Login)
+		publicApi.POST("/jwt-login", auth.JwtLogin)
 		// 注册
 		// r.POST("/register", auth.Register)
 
