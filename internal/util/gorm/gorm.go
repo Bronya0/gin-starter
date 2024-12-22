@@ -4,8 +4,6 @@ import (
 	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"gin-starter/internal/util/glog"
-	"gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
@@ -13,11 +11,26 @@ import (
 	"time"
 )
 
+type GormDB interface {
+	NewDB() *gorm.DB
+}
+
 func InitDB() {
 	if config.GloConfig.DB.Enable {
-		global.DB = InitGorm(config.GloConfig.DB.Type)
+		global.DB = InitGorm(config.GloConfig.DB.Type).NewDB()
 	} else {
 		glog.Log.Warn("数据库未启用...")
+	}
+}
+
+func InitGorm(DbType string) GormDB {
+	switch DbType {
+	case "mysql":
+		return &Mysql{}
+	case "pgsql":
+		return &PgSql{}
+	default:
+		return &PgSql{}
 	}
 }
 
@@ -47,70 +60,4 @@ func NewGormLogger(logFile string) logger.Interface {
 		},
 	)
 	return newLogger
-}
-
-func InitGorm(DbType string) *gorm.DB {
-	switch DbType {
-	case "mysql":
-		return Mysql()
-	case "pgsql":
-		return PgSql()
-	default:
-		return PgSql()
-	}
-}
-func Mysql() *gorm.DB {
-	DbConfig := config.GloConfig.DB
-
-	mysqlConfig := mysql.Config{
-		DSN:                       DbConfig.DSN, // DSN data source name
-		DefaultStringSize:         191,          // string 类型字段的默认长度
-		SkipInitializeWithVersion: false,        // 根据版本自动配置
-	}
-	db, err := gorm.Open(mysql.New(mysqlConfig), &gorm.Config{
-		SkipDefaultTransaction: true, // 跳过默认事务，提高性能
-		PrepareStmt:            true, // 缓存预编译语句
-		Logger:                 NewGormLogger(config.GloConfig.Logs.DbLog),
-	})
-	if err != nil {
-		glog.Log.Error(err)
-	} else {
-		glog.Log.Info("数据库连接成功...")
-	}
-	db.InstanceSet("gorm:table_options", "ENGINE=innodb")
-
-	sqlDB, _ := db.DB()
-	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(DbConfig.MaxIdletime))
-	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(DbConfig.MaxLifetime))
-	sqlDB.SetMaxIdleConns(DbConfig.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(DbConfig.MaxOpenConns)
-	return db
-}
-
-func PgSql() *gorm.DB {
-	DbConfig := config.GloConfig.DB
-
-	pgsqlConfig := postgres.Config{
-		DSN:                  DbConfig.DSN, // DSN data source name
-		PreferSimpleProtocol: false,
-	}
-	db, err := gorm.Open(postgres.New(pgsqlConfig), &gorm.Config{
-		SkipDefaultTransaction: true,                                       // 跳过默认事务，提高性能
-		PrepareStmt:            true,                                       // 缓存预编译语句
-		Logger:                 NewGormLogger(config.GloConfig.Logs.DbLog), //拦截、接管 gorm v2 自带日志
-	})
-
-	if err != nil {
-		glog.Log.Error(err)
-	} else {
-		glog.Log.Info("数据库连接成功...")
-	}
-
-	sqlDB, _ := db.DB()
-	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(DbConfig.MaxIdletime))
-	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(DbConfig.MaxLifetime))
-	sqlDB.SetMaxIdleConns(DbConfig.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(DbConfig.MaxOpenConns)
-	return db
-
 }
