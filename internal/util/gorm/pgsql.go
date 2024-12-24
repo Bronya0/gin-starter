@@ -8,20 +8,18 @@ import (
 	"time"
 )
 
-type PgSql struct{}
+type PgSql struct {
+	*config.DB
+	GormConfig *gorm.Config
+}
 
 func (p *PgSql) NewDB() *gorm.DB {
-	DbConfig := config.GloConfig.DB
 
 	pgsqlConfig := postgres.Config{
-		DSN:                  DbConfig.DSN, // DSN data source name
+		DSN:                  p.DSN, // DSN data source name
 		PreferSimpleProtocol: false,
 	}
-	db, err := gorm.Open(postgres.New(pgsqlConfig), &gorm.Config{
-		SkipDefaultTransaction: true,                                       // 跳过默认事务，提高性能
-		PrepareStmt:            true,                                       // 缓存预编译语句
-		Logger:                 NewGormLogger(config.GloConfig.Logs.DbLog), //拦截、接管 gorm v2 自带日志
-	})
+	db, err := gorm.Open(postgres.New(pgsqlConfig), p.GormConfig)
 
 	if err != nil {
 		glog.Log.Error(err)
@@ -30,10 +28,10 @@ func (p *PgSql) NewDB() *gorm.DB {
 	}
 
 	sqlDB, _ := db.DB()
-	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(DbConfig.MaxIdletime))
-	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(DbConfig.MaxLifetime))
-	sqlDB.SetMaxIdleConns(DbConfig.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(DbConfig.MaxOpenConns)
+	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(p.MaxIdletime))
+	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(p.MaxLifetime))
+	sqlDB.SetMaxIdleConns(p.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(p.MaxOpenConns)
 	return db
 
 }

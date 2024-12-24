@@ -17,20 +17,26 @@ type GormDB interface {
 
 func InitDB() {
 	if config.GloConfig.DB.Enable {
-		global.DB = InitGorm(config.GloConfig.DB.Type).NewDB()
+		global.DB = InitGorm(&config.GloConfig.DB).NewDB()
 	} else {
 		glog.Log.Warn("数据库未启用...")
 	}
 }
 
-func InitGorm(DbType string) GormDB {
-	switch DbType {
+func InitGorm(db *config.DB) GormDB {
+
+	gormConfig := &gorm.Config{
+		SkipDefaultTransaction: true, // 跳过默认事务，提高性能
+		PrepareStmt:            true, // 缓存预编译语句
+		Logger:                 NewGormLogger(config.GloConfig.Logs.DbLog),
+	}
+	switch db.Type {
 	case "mysql":
-		return &Mysql{}
+		return &Mysql{db, gormConfig}
 	case "pgsql":
-		return &PgSql{}
+		return &PgSql{db, gormConfig}
 	default:
-		return &PgSql{}
+		return &PgSql{db, gormConfig}
 	}
 }
 

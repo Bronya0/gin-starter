@@ -8,20 +8,18 @@ import (
 	"time"
 )
 
-type Mysql struct{}
+type Mysql struct {
+	*config.DB
+	GormConfig *gorm.Config
+}
 
 func (m *Mysql) NewDB() *gorm.DB {
-	DbConfig := config.GloConfig.DB
 
 	mysqlConfig := mysql.Config{
-		DSN:                       DbConfig.DSN, // DSN data source name
-		SkipInitializeWithVersion: false,        // 根据版本自动配置
+		DSN:                       m.DSN, // DSN data source name
+		SkipInitializeWithVersion: false, // 根据版本自动配置
 	}
-	db, err := gorm.Open(mysql.New(mysqlConfig), &gorm.Config{
-		SkipDefaultTransaction: true, // 跳过默认事务，提高性能
-		PrepareStmt:            true, // 缓存预编译语句
-		Logger:                 NewGormLogger(config.GloConfig.Logs.DbLog),
-	})
+	db, err := gorm.Open(mysql.New(mysqlConfig), m.GormConfig)
 	if err != nil {
 		glog.Log.Error(err)
 	} else {
@@ -30,9 +28,9 @@ func (m *Mysql) NewDB() *gorm.DB {
 	db.InstanceSet("gorm:table_options", "ENGINE=innodb")
 
 	sqlDB, _ := db.DB()
-	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(DbConfig.MaxIdletime))
-	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(DbConfig.MaxLifetime))
-	sqlDB.SetMaxIdleConns(DbConfig.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(DbConfig.MaxOpenConns)
+	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(m.MaxIdletime))
+	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(m.MaxLifetime))
+	sqlDB.SetMaxIdleConns(m.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(m.MaxOpenConns)
 	return db
 }
