@@ -23,6 +23,7 @@ func (p *PgSql) NewDB() *gorm.DB {
 
 	if err != nil {
 		glog.Log.Error(err)
+		panic(err)
 	} else {
 		glog.Log.Info("数据库连接成功...")
 	}

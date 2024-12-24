@@ -22,6 +22,7 @@ func (m *Mysql) NewDB() *gorm.DB {
 	db, err := gorm.Open(mysql.New(mysqlConfig), m.GormConfig)
 	if err != nil {
 		glog.Log.Error(err)
+		panic(err)
 	} else {
 		glog.Log.Info("数据库连接成功...")
 	}

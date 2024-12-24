@@ -35,19 +35,20 @@ type Server struct {
 }
 
 type DB struct {
-	Enable       bool   `yaml:"Enable"`
-	Type         string `yaml:"Type"`
-	DSN          string `yaml:"DSN"`
-	MaxLifetime  int    `yaml:"MaxLifetime"`
-	MaxIdletime  int    `yaml:"MaxIdletime"`
-	MaxOpenConns int    `yaml:"MaxOpenConns"`
-	MaxIdleConns int    `yaml:"MaxIdleConns"`
+	Enable        bool   `yaml:"Enable"`
+	Type          string `yaml:"Type"`
+	DSN           string `yaml:"DSN"`
+	DbLog         string `yaml:"DbLog"`
+	MaxLifetime   int    `yaml:"MaxLifetime"`
+	MaxIdletime   int    `yaml:"MaxIdletime"`
+	MaxOpenConns  int    `yaml:"MaxOpenConns"`
+	MaxIdleConns  int    `yaml:"MaxIdleConns"`
+	SlowThreshold int    `yaml:"SlowThreshold"`
 }
 
 type Logs struct {
 	Level string `yaml:"Level"`
 	Path  string `yaml:"Path"`
-	DbLog string `yaml:"DbLog"`
 }
 
 type Redis struct {

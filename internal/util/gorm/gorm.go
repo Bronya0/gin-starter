@@ -1,13 +1,13 @@
 package gorm
 
 import (
+	"fmt"
 	"gin-starter/internal/config"
 	"gin-starter/internal/global"
 	"gin-starter/internal/util/glog"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
-	"log"
-	"os"
+	gormLog "gorm.io/gorm/logger"
+	"strings"
 	"time"
 )
 
@@ -17,20 +17,20 @@ type GormDB interface {
 
 func InitDB() {
 	if config.GloConfig.DB.Enable {
-		global.DB = InitGorm(&config.GloConfig.DB).NewDB()
+		global.DB = InitGorm(config.GloConfig).NewDB()
 	} else {
 		glog.Log.Warn("数据库未启用...")
 	}
 }
 
-func InitGorm(db *config.DB) GormDB {
-
+func InitGorm(gloConfig *config.Config) GormDB {
+	db := &gloConfig.DB
 	gormConfig := &gorm.Config{
 		SkipDefaultTransaction: true, // 跳过默认事务，提高性能
 		PrepareStmt:            true, // 缓存预编译语句
-		Logger:                 NewGormLogger(config.GloConfig.Logs.DbLog),
+		Logger:                 NewGormLogger(gloConfig),
 	}
-	switch db.Type {
+	switch gloConfig.DB.Type {
 	case "mysql":
 		return &Mysql{db, gormConfig}
 	case "pgsql":
@@ -40,30 +40,35 @@ func InitGorm(db *config.DB) GormDB {
 	}
 }
 
-func NewGormLogger(logFile string) logger.Interface {
-
-	var writer logger.Writer
-	if config.GloConfig.Server.Debug {
-		writer = log.New(os.Stdout, "\r\n", log.LstdFlags)
-	} else {
-		file, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-		if err != nil {
-			glog.Log.Fatalf("无法创建gorm日志: %v", err)
-		}
-		defer file.Close() // 文件将在函数退出时自动关闭
-		writer = log.New(file, "\r\n", log.LstdFlags)
-	}
-
-	// 使用os.File作为io.Writer
-	newLogger := logger.New(
-		writer,
-		logger.Config{
-			SlowThreshold:             3 * time.Second, // Slow SQL threshold
-			LogLevel:                  logger.Warn,     // Log level
-			IgnoreRecordNotFoundError: true,            // Ignore ErrRecordNotFound error for logger
-			ParameterizedQueries:      true,            // Don't include params in the SQL log
-			Colorful:                  false,           // Disable color
+func NewGormLogger(gloConfig *config.Config) gormLog.Interface {
+	newLogger := gormLog.New(
+		&CustomWriter{},
+		gormLog.Config{
+			SlowThreshold:             time.Duration(gloConfig.DB.SlowThreshold) * time.Second, // Slow SQL threshold
+			LogLevel:                  gormLog.Warn,                                            // Log level
+			IgnoreRecordNotFoundError: true,                                                    // 记录日志时会忽略ErrRecordNotFound错误
+			ParameterizedQueries:      true,                                                    // 不会在SQL日志中记录参数值，这有助于保护敏感信息不被记录在日志中。
+			Colorful:                  true,                                                    // 如果设置为true，日志将以彩色显示，这有助于在终端中快速区分不同级别的日志。
 		},
 	)
+
 	return newLogger
+}
+
+type CustomWriter struct{}
+
+func (l CustomWriter) Printf(strFormat string, args ...interface{}) {
+	logRes := fmt.Sprintf(strFormat, args...)
+	logFlag := "gorm日志:"
+	if strings.HasPrefix(strFormat, "[info]") || strings.HasPrefix(strFormat, "[traceStr]") {
+		glog.Log.Info(logRes)
+	} else if strings.HasPrefix(strFormat, "[error]") || strings.HasPrefix(strFormat, "[traceErr]") {
+		glog.Log.Error(logFlag, logRes)
+	} else if strings.HasPrefix(strFormat, "[warn]") || strings.HasPrefix(strFormat, "[traceWarn]") {
+		glog.Log.Warn(logFlag, logRes)
+	} else {
+		fmt.Println(111, strFormat, args)
+		glog.Log.Info(logFlag, logRes)
+	}
+
 }
