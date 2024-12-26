@@ -5,7 +5,6 @@ import (
 	"gin-starter/internal/util/glog"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"time"
 )
 
 type PgSql struct {
@@ -28,11 +27,6 @@ func (p *PgSql) NewDB() *gorm.DB {
 		glog.Log.Info("数据库连接成功...")
 	}
 
-	sqlDB, _ := db.DB()
-	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(p.MaxIdletime))
-	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(p.MaxLifetime))
-	sqlDB.SetMaxIdleConns(p.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(p.MaxOpenConns)
 	return db
 
 }

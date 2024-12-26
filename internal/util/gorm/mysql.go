@@ -5,7 +5,6 @@ import (
 	"gin-starter/internal/util/glog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"time"
 )
 
 type Mysql struct {
@@ -28,10 +27,5 @@ func (m *Mysql) NewDB() *gorm.DB {
 	}
 	db.InstanceSet("gorm:table_options", "ENGINE=innodb")
 
-	sqlDB, _ := db.DB()
-	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(m.MaxIdletime))
-	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(m.MaxLifetime))
-	sqlDB.SetMaxIdleConns(m.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(m.MaxOpenConns)
 	return db
 }
