@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-type GormDB interface {
+type IGormDB interface {
 	NewDB() *gorm.DB
 }
 
@@ -31,7 +31,7 @@ func InitGorm(gloConfig *config.Config) *gorm.DB {
 		Logger:                 NewGormLogger(gloConfig),
 	}
 
-	var db GormDB
+	var db IGormDB
 	switch gloConfig.DB.Type {
 	case "mysql":
 		db = &Mysql{dbConf, gormConfig}
